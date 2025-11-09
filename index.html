@@ -1,0 +1,1962 @@
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>率土之滨宝物助手</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8B5CF6',
+                        secondary: '#EC4899',
+                        neutral: '#1F2937',
+                        urgent: '#FF5722',
+                        low: '#4CAF50',
+                        high: '#F57C00'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto { content-visibility: auto; }
+            .card-hover { @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1; }
+            .nav-active { @apply text-primary font-medium border-b-2 border-primary; }
+            .module-hidden { @apply hidden; }
+            .effect-item { @apply text-sm text-gray-600 py-0.5 border-b border-gray-100; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- 导航栏 -->
+    <nav class="bg-white shadow-md fixed w-full z-10">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-diamond text-primary text-2xl"></i>
+                <h1 class="text-xl font-bold text-neutral">率土之滨宝物助手</h1>
+            </div>
+            <div class="hidden md:flex space-x-6">
+                <a href="#treasures" class="text-neutral hover:text-primary transition-colors nav-item nav-active" data-target="treasures">宝物清单</a>
+                <a href="#recommendations" class="text-neutral hover:text-primary transition-colors nav-item" data-target="recommendations">宝物推荐</a>
+                <a href="#requirements" class="text-neutral hover:text-primary transition-colors nav-item" data-target="requirements">客户需求</a>
+                <a href="#history" class="text-neutral hover:text-primary transition-colors nav-item" data-target="history">历史记录</a>
+            </div>
+            <button class="md:hidden text-neutral text-xl mobile-menu-btn">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+        <!-- 移动端菜单 -->
+        <div class="md:hidden hidden bg-white shadow-lg absolute w-full mobile-menu">
+            <div class="container mx-auto px-4 py-2 flex flex-col space-y-3">
+                <a href="#treasures" class="text-neutral hover:text-primary py-2 transition-colors nav-item" data-target="treasures">宝物清单</a>
+                <a href="#recommendations" class="text-neutral hover:text-primary py-2 transition-colors nav-item" data-target="recommendations">宝物推荐</a>
+                <a href="#requirements" class="text-neutral hover:text-primary py-2 transition-colors nav-item" data-target="requirements">客户需求</a>
+                <a href="#history" class="text-neutral hover:text-primary py-2 transition-colors nav-item" data-target="history">历史记录</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容区（模块由脚本自动生成） -->
+    <main class="container mx-auto px-4 pt-20 pb-16">
+        
+    <!-- 回到顶部按钮 -->
+    <button id="backToTop" class="fixed right-4 bottom-16 bg-primary text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center z-40 hidden hover:bg-primary/90 transition-all">
+        <i class="fa fa-arrow-up"></i>
+    </button>
+    
+    <!-- 电脑端右侧固定功能按钮 -->
+    <div class="fixed right-4 top-1/2 transform -translate-y-1/2 z-40 hidden md:flex flex-col space-y-3">
+        <button id="pcWechatBtn" class="w-12 h-12 rounded-full bg-green-600 text-white flex items-center justify-center hover:bg-green-700 transition-colors shadow-lg" title="微信联系">
+            <i class="fa fa-weixin text-xl"></i>
+        </button>
+        <button id="pcFeedbackBtn" class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 transition-colors shadow-lg" title="意见反馈">
+            <i class="fa fa-envelope text-xl"></i>
+        </button>
+    </div>
+    
+    <!-- 微信模态框 -->
+    <div id="wechatModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4 shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">微信联系方式</h3>
+                <button id="closeWechatModal" class="text-gray-500 hover:text-gray-700"><i class="fa fa-times text-xl"></i></button>
+            </div>
+            <div class="flex flex-col items-center mb-4">
+                <p class="text-lg font-medium mb-2">微信号：AY5550222</p>
+                <button id="copyWechatBtn" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors transform hover:scale-105">一键复制</button>
+                <div id="copySuccessTip" class="mt-3 text-green-500 text-sm hidden"><i class="fa fa-check-circle mr-1"></i> 复制成功！</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 反馈模态框 -->
+    <div id="feedbackModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4 shadow-xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">意见反馈</h3>
+                <button id="closeFeedbackModal" class="text-gray-500 hover:text-gray-700"><i class="fa fa-times text-xl"></i></button>
+            </div>
+            <form id="feedbackForm" class="space-y-4">
+                <div><label class="block text-gray-700 mb-2">反馈类型</label>
+                    <select class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                        <option value="suggestion">功能建议</option><option value="bug">问题反馈</option><option value="other">其他</option>
+                    </select>
+                </div>
+                <div><label class="block text-gray-700 mb-2">反馈内容</label>
+                    <textarea class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" rows="4" required></textarea>
+                </div>
+                <div><label class="block text-gray-700 mb-2">联系方式（选填）</label>
+                    <input type="text" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" placeholder="请输入微信号或手机号">
+                </div>
+                <div class="flex flex-col items-center">
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors w-full">提交反馈</button>
+                    <div id="feedbackSuccessTip" class="mt-3 text-green-500 text-sm hidden"><i class="fa fa-check-circle mr-1"></i> 提交成功！</div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <section id="treasures" class="mb-20 module-content">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold text-neutral">今日在售清单</h2>
+            <button class="bg-primary text-white px-3 py-1.5 rounded-lg hover:bg-primary/90 transition-colors text-sm">
+                <i class="fa fa-share-alt mr-1"></i> 分享清单
+            </button>
+        </div>
+        <div class="mb-6">
+            <h3 class="text-base font-bold text-neutral mb-3 flex items-center">
+                <i class="fa fa-fire text-urgent mr-2"></i> 急出特价
+            </h3>
+            <div class="overflow-x-auto pb-2">
+                <div id="urgentTreasures" class="flex space-x-3 flex-wrap">
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-3 w-full sm:w-[280px] treasure-card" 
+                 data-price="low" data-name="乌号" data-forge="至策"
+                 data-treasure-type="乌号" data-forge-effect="至策">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('urgent-2')">
+                    <h3 class="font-bold text-base">乌号至策17</h3>
+                    <span class="bg-urgent/10 text-urgent text-xs px-2 py-0.5 rounded">急出</span>
+                </div>
+                <div class="text-urgent font-bold text-lg mb-1">330元</div>
+                <div id="urgent-2" class="hidden">
+                    <div class="mb-2 mt-2"><div class="font-medium text-gray-800 text-xs mb-1">自带效果：</div><div class="effect-item text-xs">骁锐：攻击属性提高 2.5</div><div class="effect-item text-xs">亢厉：主动及追击武将主战法伤害提高 1.0%</div><div class="effect-item text-xs">奇袭：与目标距离每 + 1，攻击伤害 + 3.0%</div></div>
+                    <div class="mb-2"><div class="font-medium text-gray-800 text-xs mb-1">锻造效果：</div><div class="text-gray-600 text-xs">至策：主动战法伤害提高 17%</div></div>
+                    <div><div class="font-medium text-gray-800 text-xs mb-1">适用武将：</div><div class="effect-item text-xs">暂无推荐，待补充</div></div>
+                </div>
+                <div class="text-xs text-gray-400 mt-1 cursor-pointer" onclick="toggleDetails('urgent-2')">
+                    <i class="fa fa-chevron-down" id="icon-urgent-2"></i> 详情
+                </div>
+            </div>
+            </div>
+            </div>
+        </div>
+
+        <div class="relative mb-4">
+            <div class="flex gap-2 mb-2 flex-wrap">
+                <button class="price-tab bg-neutral text-white px-3 py-1.5 rounded-lg text-sm" data-type="all">全部宝物</button>
+                <button class="price-tab bg-low/10 text-low px-3 py-1.5 rounded-lg text-sm" data-type="low">千元以下</button>
+                <button class="price-tab bg-high/10 text-high px-3 py-1.5 rounded-lg text-sm" data-type="high">千元以上</button>
+                <button id="resetFilters" class="bg-gray-100 text-gray-600 px-3 py-1.5 rounded-lg hover:bg-gray-200 transition-colors text-sm">
+                    <i class="fa fa-refresh mr-1"></i> 重置
+                </button>
+            </div>
+            <div class="relative">
+                <button id="toggleTreasureType" class="w-full md:w-auto flex items-center justify-between bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-sm font-medium text-gray-800 hover:bg-gray-50 transition-colors">
+                    <span>宝物类型</span><i class="fa fa-chevron-down text-xs transition-transform duration-200"></i>
+                </button>
+                <div id="treasureTypeOptions" class="hidden absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg p-2 flex flex-wrap gap-2 z-10">
+                    
+    <button class="treasure-type-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="乌号">
+        乌号
+    </button>
+    
+    <button class="treasure-type-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="冥山勾月">
+        冥山勾月
+    </button>
+    
+    <button class="treasure-type-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="别铭">
+        别铭
+    </button>
+    
+    <button class="treasure-type-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="博浪">
+        博浪
+    </button>
+    
+    <button class="treasure-type-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="少府">
+        少府
+    </button>
+    
+    <button class="treasure-type-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="屈卢">
+        屈卢
+    </button>
+    
+    <button class="treasure-type-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="彤素">
+        彤素
+    </button>
+    
+    <button class="treasure-type-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="徐氏匕首">
+        徐氏匕首
+    </button>
+    
+    <button class="treasure-type-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="悬翦">
+        悬翦
+    </button>
+    
+    <button class="treasure-type-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="戚">
+        戚
+    </button>
+    
+    <button class="treasure-type-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="掩日">
+        掩日
+    </button>
+    
+    <button class="treasure-type-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="比翼">
+        比翼
+    </button>
+    
+    <button class="treasure-type-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="沧海">
+        沧海
+    </button>
+    
+    <button class="treasure-type-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="泰阿">
+        泰阿
+    </button>
+    
+    <button class="treasure-type-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="游飘">
+        游飘
+    </button>
+    
+    <button class="treasure-type-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="狰角枪">
+        狰角枪
+    </button>
+    
+    <button class="treasure-type-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="真刚">
+        真刚
+    </button>
+    
+    <button class="treasure-type-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="貔貅">
+        貔貅
+    </button>
+    
+    <button class="treasure-type-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="钜黍">
+        钜黍
+    </button>
+    
+    <button class="treasure-type-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="铭鸿">
+        铭鸿
+    </button>
+    
+    <button class="treasure-type-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="锟铻">
+        锟铻
+    </button>
+    
+    <button class="treasure-type-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="障日">
+        障日
+    </button>
+    
+                </div>
+            </div>
+            <div class="relative mt-2">
+                <button id="toggleForgeEffect" class="w-full md:w-auto flex items-center justify-between bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-sm font-medium text-gray-800 hover:bg-gray-50 transition-colors">
+                    <span>锻造效果</span><i class="fa fa-chevron-down text-xs transition-transform duration-200"></i>
+                </button>
+                <div id="forgeEffectOptions" class="hidden absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg p-2 flex flex-wrap gap-2 z-10">
+                    
+    <button class="forge-effect-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="不屈">
+        不屈
+    </button>
+    
+    <button class="forge-effect-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="亢厉">
+        亢厉
+    </button>
+    
+    <button class="forge-effect-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="仁心">
+        仁心
+    </button>
+    
+    <button class="forge-effect-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="击虚">
+        击虚
+    </button>
+    
+    <button class="forge-effect-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="善谋">
+        善谋
+    </button>
+    
+    <button class="forge-effect-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="坚忍">
+        坚忍
+    </button>
+    
+    <button class="forge-effect-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="坚毅">
+        坚毅
+    </button>
+    
+    <button class="forge-effect-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="天资">
+        天资
+    </button>
+    
+    <button class="forge-effect-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="奔袭">
+        奔袭
+    </button>
+    
+    <button class="forge-effect-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="威势">
+        威势
+    </button>
+    
+    <button class="forge-effect-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="惑言">
+        惑言
+    </button>
+    
+    <button class="forge-effect-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="无畏">
+        无畏
+    </button>
+    
+    <button class="forge-effect-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="济世">
+        济世
+    </button>
+    
+    <button class="forge-effect-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="灵动">
+        灵动
+    </button>
+    
+    <button class="forge-effect-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="破敌">
+        破敌
+    </button>
+    
+    <button class="forge-effect-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="筹算">
+        筹算
+    </button>
+    
+    <button class="forge-effect-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="至策">
+        至策
+    </button>
+    
+    <button class="forge-effect-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="艮止">
+        艮止
+    </button>
+    
+    <button class="forge-effect-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="英勇">
+        英勇
+    </button>
+    
+    <button class="forge-effect-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="陷阵">
+        陷阵
+    </button>
+    
+    <button class="forge-effect-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="颖悟">
+        颖悟
+    </button>
+    
+    <button class="forge-effect-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="骁锐">
+        骁锐
+    </button>
+    
+                </div>
+            </div>
+        </div>
+
+        <!-- 普通宝物容器（分页） -->
+        <div id="normalTreasuresContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="乌号" data-forge="亢厉"
+                 data-treasure-type="乌号" data-forge-effect="亢厉" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-1')">
+                    <h3 class="font-bold text-base">乌号亢厉24</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">900元</div>
+                <div id="normal-1" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">骁锐：攻击属性提高 2.5</div><div class="effect-item text-xs">亢厉：主动及追击武将主战法伤害提高 1.0%</div><div class="effect-item text-xs">奇袭：与目标距离每 + 1，攻击伤害 + 3.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">亢厉：主动及追击武将主战法伤害提高 24%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">张绣</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-1')">
+                    <i class="fa fa-chevron-down" id="icon-normal-1"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="乌号" data-forge="击虚"
+                 data-treasure-type="乌号" data-forge-effect="击虚" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-3')">
+                    <h3 class="font-bold text-base">乌号击虚7</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">330元</div>
+                <div id="normal-3" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">骁锐：攻击属性提高 2.5</div><div class="effect-item text-xs">亢厉：主动及追击武将主战法伤害提高 1.0%</div><div class="effect-item text-xs">奇袭：与目标距离每 + 1，攻击伤害 + 3.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">击虚：正式回合后，目标每存在一种持续性伤害 / 控制效果，自身对其造成的伤害提升 7%（最多计算 5 种）</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">暂无推荐，待补充</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-3')">
+                    <i class="fa fa-chevron-down" id="icon-normal-3"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="冥山勾月" data-forge="破敌"
+                 data-treasure-type="冥山勾月" data-forge-effect="破敌" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-4')">
+                    <h3 class="font-bold text-base">冥山勾月破敌17</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">720元</div>
+                <div id="normal-4" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">稳固：防御属性提高 3.0</div><div class="effect-item text-xs">英才：攻击、谋略属性提高 1.5%</div><div class="effect-item text-xs">亢厉：主动及追击武将主战法伤害提高 10.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">破敌：造成的攻击伤害无视目标 17% 的防御属性</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">暂无推荐，待补充</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-4')">
+                    <i class="fa fa-chevron-down" id="icon-normal-4"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="别铭" data-forge="仁心"
+                 data-treasure-type="别铭" data-forge-effect="仁心" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-5')">
+                    <h3 class="font-bold text-base">别铭仁心12</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">850元</div>
+                <div id="normal-5" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">稳固：防御属性提高 3.0</div><div class="effect-item text-xs">不移：受所有伤害降低 1.0%</div><div class="effect-item text-xs">英才：谋略、速度属性提高 5.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">仁心：造成的恢复效果提高 12%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">张机, 甄洛</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-5')">
+                    <i class="fa fa-chevron-down" id="icon-normal-5"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="别铭" data-forge="坚忍"
+                 data-treasure-type="别铭" data-forge-effect="坚忍" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-6')">
+                    <h3 class="font-bold text-base">别铭坚忍17</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">580元</div>
+                <div id="normal-6" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">稳固：防御属性提高 3.0</div><div class="effect-item text-xs">不移：受所有伤害降低 1.0%</div><div class="effect-item text-xs">英才：谋略、速度属性提高 5.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">坚忍：受到的主动战法伤害降低 17%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">曹操, 张辽（前锋抗伤）, 法正, 张机, 甄洛</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-6')">
+                    <i class="fa fa-chevron-down" id="icon-normal-6"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="别铭" data-forge="灵动"
+                 data-treasure-type="别铭" data-forge-effect="灵动" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-7')">
+                    <h3 class="font-bold text-base">别铭灵动24</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">950元</div>
+                <div id="normal-7" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">稳固：防御属性提高 3.0</div><div class="effect-item text-xs">不移：受所有伤害降低 1.0%</div><div class="effect-item text-xs">英才：谋略、速度属性提高 5.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">灵动：速度属性提高 24</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">法正, 何太后</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-7')">
+                    <i class="fa fa-chevron-down" id="icon-normal-7"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="high" data-name="博浪" data-forge="艮止"
+                 data-treasure-type="博浪" data-forge-effect="艮止" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-8')">
+                    <h3 class="font-bold text-base">博浪艮止24</h3>
+                    
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">询价</div>
+                <div id="normal-8" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">妄贞：混乱、暴走、怯战、犹豫状态下受伤降低 1.0%</div><div class="effect-item text-xs">坚忍：受到的主动战法伤害降低 2.0%</div><div class="effect-item text-xs">抖擞：自身受到的恢复效果提高 25.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">艮止：自身无法普通攻击，谋略提高 24</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">刘备, 黄月英, 张机</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-8')">
+                    <i class="fa fa-chevron-down" id="icon-normal-8"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="high" data-name="博浪" data-forge="艮止"
+                 data-treasure-type="博浪" data-forge-effect="艮止" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-9')">
+                    <h3 class="font-bold text-base">博浪艮止26</h3>
+                    
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">询价</div>
+                <div id="normal-9" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">妄贞：混乱、暴走、怯战、犹豫状态下受伤降低 1.0%</div><div class="effect-item text-xs">坚忍：受到的主动战法伤害降低 2.0%</div><div class="effect-item text-xs">抖擞：自身受到的恢复效果提高 25.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">艮止：自身无法普通攻击，谋略提高 26</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">刘备, 黄月英, 张机</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-9')">
+                    <i class="fa fa-chevron-down" id="icon-normal-9"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="博浪" data-forge="坚忍"
+                 data-treasure-type="博浪" data-forge-effect="坚忍" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-10')">
+                    <h3 class="font-bold text-base">博浪坚忍17</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">950元</div>
+                <div id="normal-10" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">妄贞：混乱、暴走、怯战、犹豫状态下受伤降低 1.0%</div><div class="effect-item text-xs">坚忍：受到的主动战法伤害降低 2.0%</div><div class="effect-item text-xs">抖擞：自身受到的恢复效果提高 25.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">坚忍：受到的主动战法伤害降低 17%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">周泰, 汉董卓, 郝昭, 严颜, 程普, 刘备, 夏侯霸, 皇甫嵩</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-10')">
+                    <i class="fa fa-chevron-down" id="icon-normal-10"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="博浪" data-forge="灵动"
+                 data-treasure-type="博浪" data-forge-effect="灵动" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-11')">
+                    <h3 class="font-bold text-base">博浪灵动24</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">920元</div>
+                <div id="normal-11" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">妄贞：混乱、暴走、怯战、犹豫状态下受伤降低 1.0%</div><div class="effect-item text-xs">坚忍：受到的主动战法伤害降低 2.0%</div><div class="effect-item text-xs">抖擞：自身受到的恢复效果提高 25.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">灵动：速度属性提高 24</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">张机, 貂蝉, 曹操</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-11')">
+                    <i class="fa fa-chevron-down" id="icon-normal-11"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="少府" data-forge="奔袭"
+                 data-treasure-type="少府" data-forge-effect="奔袭" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-12')">
+                    <h3 class="font-bold text-base">少府奔袭7</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">630元</div>
+                <div id="normal-12" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">骁锐：攻击属性提高 2.0</div><div class="effect-item text-xs">陷阵：前 4 回合普通攻击伤害提高 2.0%</div><div class="effect-item text-xs">再战：第 5 回合有 50% 几率获得连击效果</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">奔袭：追击战法发动率提高 7%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">太史慈, 蒋钦, 甘宁（法刀输出）</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-12')">
+                    <i class="fa fa-chevron-down" id="icon-normal-12"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="少府" data-forge="无畏"
+                 data-treasure-type="少府" data-forge-effect="无畏" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-13')">
+                    <h3 class="font-bold text-base">少府无畏24</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">500元</div>
+                <div id="normal-13" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">骁锐：攻击属性提高 2.0</div><div class="effect-item text-xs">陷阵：前 4 回合普通攻击伤害提高 2.0%</div><div class="effect-item text-xs">再战：第 5 回合有 50% 几率获得连击效果</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">无畏：追击战法伤害提高 24%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">太史慈, 蒋钦, 郝昭（先驱三军）</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-13')">
+                    <i class="fa fa-chevron-down" id="icon-normal-13"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="high" data-name="屈卢" data-forge="坚毅"
+                 data-treasure-type="屈卢" data-forge-effect="坚毅" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-14')">
+                    <h3 class="font-bold text-base">屈卢坚毅5</h3>
+                    
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">询价</div>
+                <div id="normal-14" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">骁锐：攻击属性提高 2.0</div><div class="effect-item text-xs">无畏：追击战法伤害提高 1.0%</div><div class="effect-item text-xs">破敌：造成的攻击伤害无视目标 10.0% 的防御属性</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">坚毅：前 5 回合免疫混乱及暴走。</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">马超, 马云禄</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-14')">
+                    <i class="fa fa-chevron-down" id="icon-normal-14"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="屈卢" data-forge="奔袭"
+                 data-treasure-type="屈卢" data-forge-effect="奔袭" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-15')">
+                    <h3 class="font-bold text-base">屈卢奔袭7</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">630元</div>
+                <div id="normal-15" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">骁锐：攻击属性提高 2.0</div><div class="effect-item text-xs">无畏：追击战法伤害提高 1.0%</div><div class="effect-item text-xs">破敌：造成的攻击伤害无视目标 10.0% 的防御属性</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">奔袭：追击战法发动率提高 7%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">太史慈, 蒋钦, 马云禄, 马超</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-15')">
+                    <i class="fa fa-chevron-down" id="icon-normal-15"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="屈卢" data-forge="无畏"
+                 data-treasure-type="屈卢" data-forge-effect="无畏" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-16')">
+                    <h3 class="font-bold text-base">屈卢无畏24</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">500元</div>
+                <div id="normal-16" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">骁锐：攻击属性提高 2.0</div><div class="effect-item text-xs">无畏：追击战法伤害提高 1.0%</div><div class="effect-item text-xs">破敌：造成的攻击伤害无视目标 10.0% 的防御属性</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">无畏：追击战法伤害提高 24%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">太史慈, 蒋钦, 马云禄, 马超, 公孙瓒</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-16')">
+                    <i class="fa fa-chevron-down" id="icon-normal-16"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="high" data-name="屈卢" data-forge="无畏"
+                 data-treasure-type="屈卢" data-forge-effect="无畏" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-17')">
+                    <h3 class="font-bold text-base">屈卢无畏26</h3>
+                    
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">询价</div>
+                <div id="normal-17" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">骁锐：攻击属性提高 2.0</div><div class="effect-item text-xs">无畏：追击战法伤害提高 1.0%</div><div class="effect-item text-xs">破敌：造成的攻击伤害无视目标 10.0% 的防御属性</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">无畏：追击战法伤害提高 26%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">太史慈, 蒋钦, 马云禄, 马超, 公孙瓒</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-17')">
+                    <i class="fa fa-chevron-down" id="icon-normal-17"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="high" data-name="屈卢" data-forge="陷阵"
+                 data-treasure-type="屈卢" data-forge-effect="陷阵" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-18')">
+                    <h3 class="font-bold text-base">屈卢陷阵26</h3>
+                    
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">询价</div>
+                <div id="normal-18" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">骁锐：攻击属性提高 2.0</div><div class="effect-item text-xs">无畏：追击战法伤害提高 1.0%</div><div class="effect-item text-xs">破敌：造成的攻击伤害无视目标 10.0% 的防御属性</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">陷阵：普通攻击伤害提高 26%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">祝融, 马超, 马云禄, 关平&张飞, 灵帝, 木鹿大王</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-18')">
+                    <i class="fa fa-chevron-down" id="icon-normal-18"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="屈卢" data-forge="骁锐"
+                 data-treasure-type="屈卢" data-forge-effect="骁锐" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-19')">
+                    <h3 class="font-bold text-base">屈卢骁锐12</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">880元</div>
+                <div id="normal-19" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">骁锐：攻击属性提高 2.0</div><div class="effect-item text-xs">无畏：追击战法伤害提高 1.0%</div><div class="effect-item text-xs">破敌：造成的攻击伤害无视目标 10.0% 的防御属性</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">骁锐：攻击属性提高 12%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">马岱, 马超, 魏延, 祝融, 太史慈, 马云禄</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-19')">
+                    <i class="fa fa-chevron-down" id="icon-normal-19"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="彤素" data-forge="善谋"
+                 data-treasure-type="彤素" data-forge-effect="善谋" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-20')">
+                    <h3 class="font-bold text-base">彤素善谋24</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">290元</div>
+                <div id="normal-20" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">骁锐：攻击属性提高 2.5</div><div class="effect-item text-xs">亢厉：主动及追击武将主战法伤害提高 1.0%</div><div class="effect-item text-xs">奇袭：与目标距离每提高 1，造成的攻击伤害提高 3.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">善谋：造成策略伤害的武将主战法发动率提高 24%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">群袁绍（因递减机制适配）, 汉吕布, 曹仁, 关银屏</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-20')">
+                    <i class="fa fa-chevron-down" id="icon-normal-20"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="彤素" data-forge="至策"
+                 data-treasure-type="彤素" data-forge-effect="至策" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-21')">
+                    <h3 class="font-bold text-base">彤素至策17</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">630元</div>
+                <div id="normal-21" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">骁锐：攻击属性提高 2.5</div><div class="effect-item text-xs">亢厉：主动及追击武将主战法伤害提高 1.0%</div><div class="effect-item text-xs">奇袭：与目标距离每提高 1，造成的攻击伤害提高 3.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">至策：主动战法伤害提高 17%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">关银屏, 甘宁, 赵云, 群吕布, 汉吕布, 袁绍, 夏侯渊, 曹彰, 张姬, SP赵云</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-21')">
+                    <i class="fa fa-chevron-down" id="icon-normal-21"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="彤素" data-forge="破敌"
+                 data-treasure-type="彤素" data-forge-effect="破敌" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-22')">
+                    <h3 class="font-bold text-base">彤素破敌17</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">600元</div>
+                <div id="normal-22" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">骁锐：攻击属性提高 2.5</div><div class="effect-item text-xs">亢厉：主动及追击武将主战法伤害提高 1.0%</div><div class="effect-item text-xs">奇袭：与目标距离每提高 1，造成的攻击伤害提高 3.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">破敌：造成的攻击伤害无视目标 17% 的防御属性</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">关银屏, 张姬, 凌统, 蒋钦, 赵云, SP赵云, 魏延</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-22')">
+                    <i class="fa fa-chevron-down" id="icon-normal-22"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="high" data-name="徐氏匕首" data-forge="天资"
+                 data-treasure-type="徐氏匕首" data-forge-effect="天资" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-23')">
+                    <h3 class="font-bold text-base">徐氏匕首天资12</h3>
+                    
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">询价</div>
+                <div id="normal-23" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">灵动：速度属性提高 1.5</div><div class="effect-item text-xs">破敌：造成的攻击伤害无视目标 1.5% 的防御属性</div><div class="effect-item text-xs">英才：攻击、谋略属性提高 5.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">天资：谋略属性提高 12%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">暂无适用武将数据</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-23')">
+                    <i class="fa fa-chevron-down" id="icon-normal-23"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="悬翦" data-forge="骁锐"
+                 data-treasure-type="悬翦" data-forge-effect="骁锐" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-24')">
+                    <h3 class="font-bold text-base">悬翦骁锐12</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">810元</div>
+                <div id="normal-24" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">稳固：防御属性提高 1.5%</div><div class="effect-item text-xs">骁锐：攻击属性提高 1.0%</div><div class="effect-item text-xs">亢厉：主动战法的攻击伤害提高 10.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">骁锐：攻击属性提高 12%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">暂无推荐，待补充</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-24')">
+                    <i class="fa fa-chevron-down" id="icon-normal-24"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="戚" data-forge="陷阵"
+                 data-treasure-type="戚" data-forge-effect="陷阵" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-25')">
+                    <h3 class="font-bold text-base">戚陷阵24</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">500元</div>
+                <div id="normal-25" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">先知：受策略伤害降低 1.0%</div><div class="effect-item text-xs">妙算：主动战法的策略伤害提高 1.0%</div><div class="effect-item text-xs">颖悟：造成的策略伤害无视目标 10% 谋略</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">陷阵：普通攻击伤害提高 24%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">关平&张飞（通用组合）, 孙坚（前锋）</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-25')">
+                    <i class="fa fa-chevron-down" id="icon-normal-25"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="戚" data-forge="奔袭"
+                 data-treasure-type="戚" data-forge-effect="奔袭" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-26')">
+                    <h3 class="font-bold text-base">戚奔袭7</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">620元</div>
+                <div id="normal-26" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">先知：受策略伤害降低 1.0%</div><div class="effect-item text-xs">妙算：主动战法的策略伤害提高 1.0%</div><div class="effect-item text-xs">颖悟：造成的策略伤害无视目标 10% 谋略</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">奔袭：追击战法发动率提高 7%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">暂无推荐，待补充</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-26')">
+                    <i class="fa fa-chevron-down" id="icon-normal-26"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="high" data-name="掩日" data-forge="至策"
+                 data-treasure-type="掩日" data-forge-effect="至策" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-27')">
+                    <h3 class="font-bold text-base">掩日至策26</h3>
+                    
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">询价</div>
+                <div id="normal-27" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">稳固：防御属性提高 1.5</div><div class="effect-item text-xs">亢厉：主动武将主战法伤害提高 1.0%</div><div class="effect-item text-xs">谋断：第 2 次发动需要准备的主动武将主战法时，跳过 1 个准备回合</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">至策：主动战法伤害提高 26%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">关羽, 张飞, 张角</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-27')">
+                    <i class="fa fa-chevron-down" id="icon-normal-27"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="high" data-name="掩日" data-forge="天资"
+                 data-treasure-type="掩日" data-forge-effect="天资" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-28')">
+                    <h3 class="font-bold text-base">掩日天资13</h3>
+                    
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">询价</div>
+                <div id="normal-28" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">稳固：防御属性提高 1.5</div><div class="effect-item text-xs">亢厉：主动武将主战法伤害提高 1.0%</div><div class="effect-item text-xs">谋断：第 2 次发动需要准备的主动武将主战法时，跳过 1 个准备回合</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">天资：谋略属性提高 13%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">周瑜（神赏工具，垃圾粉）</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-28')">
+                    <i class="fa fa-chevron-down" id="icon-normal-28"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="掩日" data-forge="至策"
+                 data-treasure-type="掩日" data-forge-effect="至策" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-29')">
+                    <h3 class="font-bold text-base">掩日至策17</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">290元</div>
+                <div id="normal-29" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">稳固：防御属性提高 1.5</div><div class="effect-item text-xs">亢厉：主动武将主战法伤害提高 1.0%</div><div class="effect-item text-xs">谋断：第 2 次发动需要准备的主动武将主战法时，跳过 1 个准备回合</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">至策：主动战法伤害提高 17%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">关羽, 张飞, 张角</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-29')">
+                    <i class="fa fa-chevron-down" id="icon-normal-29"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="掩日" data-forge="天资"
+                 data-treasure-type="掩日" data-forge-effect="天资" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-30')">
+                    <h3 class="font-bold text-base">掩日天资12</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">320元</div>
+                <div id="normal-30" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">稳固：防御属性提高 1.5</div><div class="effect-item text-xs">亢厉：主动武将主战法伤害提高 1.0%</div><div class="effect-item text-xs">谋断：第 2 次发动需要准备的主动武将主战法时，跳过 1 个准备回合</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">天资：谋略属性提高 12%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">周瑜（神赏工具，垃圾粉）</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-30')">
+                    <i class="fa fa-chevron-down" id="icon-normal-30"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="比翼" data-forge="不屈"
+                 data-treasure-type="比翼" data-forge-effect="不屈" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-31')">
+                    <h3 class="font-bold text-base">比翼不屈7</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">800元</div>
+                <div id="normal-31" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">稳固：防御属性提高 1.0</div><div class="effect-item text-xs">天资：谋略属性提高 1.5</div><div class="effect-item text-xs">矜节：女性武将携带时，主战法造成的恢复效果提高 30.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">不屈：每次受到伤害后，本回合受到所有伤害降低 7%，可叠加</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">暂无推荐，待补充</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-31')">
+                    <i class="fa fa-chevron-down" id="icon-normal-31"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="比翼" data-forge="惑言"
+                 data-treasure-type="比翼" data-forge-effect="惑言" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-32')">
+                    <h3 class="font-bold text-base">比翼惑言3</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">750元</div>
+                <div id="normal-32" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">稳固：防御属性提高 1.0</div><div class="effect-item text-xs">天资：谋略属性提高 1.5</div><div class="effect-item text-xs">矜节：女性武将携带时，主战法造成的恢复效果提高 30.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">惑言：正式回合后，主战法成功施加的前 1-4 个控制效果（混乱、暴走、怯战、犹豫）增加 1 回合</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">暂无推荐，待补充</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-32')">
+                    <i class="fa fa-chevron-down" id="icon-normal-32"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="比翼" data-forge="艮止"
+                 data-treasure-type="比翼" data-forge-effect="艮止" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-33')">
+                    <h3 class="font-bold text-base">比翼艮止24</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">780元</div>
+                <div id="normal-33" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">稳固：防御属性提高 1.0</div><div class="effect-item text-xs">天资：谋略属性提高 1.5</div><div class="effect-item text-xs">矜节：女性武将携带时，主战法造成的恢复效果提高 30.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">艮止：自身无法普通攻击，谋略提高 24</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">小乔, 甄洛</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-33')">
+                    <i class="fa fa-chevron-down" id="icon-normal-33"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="沧海" data-forge="威势"
+                 data-treasure-type="沧海" data-forge-effect="威势" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-34')">
+                    <h3 class="font-bold text-base">沧海威势17</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">750元</div>
+                <div id="normal-34" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">稳固：防御属性提高 1.5</div><div class="effect-item text-xs">妙算：主动战法的策略伤害提高 1.0%</div><div class="effect-item text-xs">机先：正式回合后，前 2 次策略伤害提高 20.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">威势：受到初始统率值低于自身武将的所有伤害降低 17%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">暂无推荐，待补充</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-34')">
+                    <i class="fa fa-chevron-down" id="icon-normal-34"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="泰阿" data-forge="坚忍"
+                 data-treasure-type="泰阿" data-forge-effect="坚忍" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-35')">
+                    <h3 class="font-bold text-base">泰阿坚忍17</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">600元</div>
+                <div id="normal-35" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">稳固：防御属性提高 3.0</div><div class="effect-item text-xs">强韧：受到的普通攻击伤害降低 2.0%</div><div class="effect-item text-xs">护主：战斗开始后前 2 回合，援护我军大营</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">坚忍：受到的主动战法伤害降低 17%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">步皇后</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-35')">
+                    <i class="fa fa-chevron-down" id="icon-normal-35"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="high" data-name="游飘" data-forge="筹算"
+                 data-treasure-type="游飘" data-forge-effect="筹算" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-36')">
+                    <h3 class="font-bold text-base">游飘筹算13</h3>
+                    
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">询价</div>
+                <div id="normal-36" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">先知：受策略伤害降低 1.0%</div><div class="effect-item text-xs">妙算：主动战法的策略伤害提高 1.0%</div><div class="effect-item text-xs">颖悟：造成的策略伤害无视目标 10.0% 的谋略属性</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">筹算：造成策略伤害的武将主战法发动率提高 13%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">荀彧（法系输出）, 庞统（大营输出）, 大乔, 汉司马懿</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-36')">
+                    <i class="fa fa-chevron-down" id="icon-normal-36"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="游飘" data-forge="颖悟"
+                 data-treasure-type="游飘" data-forge-effect="颖悟" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-37')">
+                    <h3 class="font-bold text-base">游飘颖悟17</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">565元</div>
+                <div id="normal-37" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">先知：受策略伤害降低 1.0%</div><div class="effect-item text-xs">妙算：主动战法的策略伤害提高 1.0%</div><div class="effect-item text-xs">颖悟：造成的策略伤害无视目标 10.0% 的谋略属性</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">颖悟：造成的策略伤害无视目标 17% 的谋略属性</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">荀彧（法系输出）, 庞统（大营输出）, 大乔, 魏贾诩, 司马懿, 弓诸葛亮, 郝昭（双控）, 田丰</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-37')">
+                    <i class="fa fa-chevron-down" id="icon-normal-37"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="狰角枪" data-forge="无畏"
+                 data-treasure-type="狰角枪" data-forge-effect="无畏" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-38')">
+                    <h3 class="font-bold text-base">狰角枪无畏24</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">550元</div>
+                <div id="normal-38" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">无畏：追击战法伤害提高 1.0%</div><div class="effect-item text-xs">骁锐：攻击属性提高 3.0</div><div class="effect-item text-xs">陷阵：普通攻击伤害提高 12.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">无畏：追击战法伤害提高 24%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">公孙瓒（菜刀系）, 马超, 马云禄, 张绣, 王异, 蒋钦, SP太史慈, 徐庶</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-38')">
+                    <i class="fa fa-chevron-down" id="icon-normal-38"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="狰角枪" data-forge="奔袭"
+                 data-treasure-type="狰角枪" data-forge-effect="奔袭" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-39')">
+                    <h3 class="font-bold text-base">狰角枪奔袭7</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">630元</div>
+                <div id="normal-39" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">无畏：追击战法伤害提高 1.0%</div><div class="effect-item text-xs">骁锐：攻击属性提高 3.0</div><div class="effect-item text-xs">陷阵：普通攻击伤害提高 12.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">奔袭：追击战法发动率提高 7%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">太史慈, 蒋钦, 马云禄</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-39')">
+                    <i class="fa fa-chevron-down" id="icon-normal-39"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="真刚" data-forge="至策"
+                 data-treasure-type="真刚" data-forge-effect="至策" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-40')">
+                    <h3 class="font-bold text-base">真刚至策17</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">680元</div>
+                <div id="normal-40" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">破敌：造成的攻击伤害无视目标 1.0% 的防御属性</div><div class="effect-item text-xs">骁锐：攻击属性提高 3.0</div><div class="effect-item text-xs">盛气：正式回合后，前 2 回合造成的攻击伤害提高 20.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">至策：主动战法伤害提高 17%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">甘宁（法刀输出）, 袁绍（群）</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-40')">
+                    <i class="fa fa-chevron-down" id="icon-normal-40"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="high" data-name="貔貅" data-forge="奔袭"
+                 data-treasure-type="貔貅" data-forge-effect="奔袭" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-41')">
+                    <h3 class="font-bold text-base">貔貅奔袭7</h3>
+                    
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">询价</div>
+                <div id="normal-41" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">坚忍：受到的主动战法伤害降低 1.0%</div><div class="effect-item text-xs">骁锐：攻击属性提高 2.0</div><div class="effect-item text-xs">迅猛：处于连击状态时，普通攻击伤害提高 20.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">奔袭：追击战法发动率提高 7%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">暂无推荐，待补充</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-41')">
+                    <i class="fa fa-chevron-down" id="icon-normal-41"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="钜黍" data-forge="天资"
+                 data-treasure-type="钜黍" data-forge-effect="天资" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-42')">
+                    <h3 class="font-bold text-base">钜黍天资12</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">580元</div>
+                <div id="normal-42" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">稳固：防御属性提高 1.5</div><div class="effect-item text-xs">骁锐：攻击属性提高 1.0%</div><div class="effect-item text-xs">亢厉：主动战法的攻击伤害提高 10.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">天资：谋略属性提高 12%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">暂无推荐，待补充</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-42')">
+                    <i class="fa fa-chevron-down" id="icon-normal-42"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="钜黍" data-forge="亢厉"
+                 data-treasure-type="钜黍" data-forge-effect="亢厉" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-43')">
+                    <h3 class="font-bold text-base">钜黍亢厉24</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">530元</div>
+                <div id="normal-43" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">稳固：防御属性提高 1.5</div><div class="effect-item text-xs">骁锐：攻击属性提高 1.0%</div><div class="effect-item text-xs">亢厉：主动战法的攻击伤害提高 10.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">亢厉：主动及追击武将主战法伤害提高 24%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">王异</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-43')">
+                    <i class="fa fa-chevron-down" id="icon-normal-43"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="铭鸿" data-forge="亢厉"
+                 data-treasure-type="铭鸿" data-forge-effect="亢厉" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-44')">
+                    <h3 class="font-bold text-base">铭鸿亢厉24</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">580元</div>
+                <div id="normal-44" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">稳固：防御属性提高 3.0</div><div class="effect-item text-xs">英才：攻击、谋略属性提高 1.5%</div><div class="effect-item text-xs">亢厉：主动及追击武将主战法伤害提高 10.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">亢厉：主动及追击武将主战法伤害提高 24%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">王异</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-44')">
+                    <i class="fa fa-chevron-down" id="icon-normal-44"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="high" data-name="铭鸿" data-forge="英勇"
+                 data-treasure-type="铭鸿" data-forge-effect="英勇" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-45')">
+                    <h3 class="font-bold text-base">铭鸿英勇12</h3>
+                    
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">询价</div>
+                <div id="normal-45" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">稳固：防御属性提高 3.0</div><div class="effect-item text-xs">英才：攻击、谋略属性提高 1.5%</div><div class="effect-item text-xs">亢厉：主动及追击武将主战法伤害提高 10.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">英勇：造成攻击伤害的武将主战法发动率提高 12%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">暂无推荐，待补充</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-45')">
+                    <i class="fa fa-chevron-down" id="icon-normal-45"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="铭鸿" data-forge="天资"
+                 data-treasure-type="铭鸿" data-forge-effect="天资" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-46')">
+                    <h3 class="font-bold text-base">铭鸿天资12</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">520元</div>
+                <div id="normal-46" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">稳固：防御属性提高 3.0</div><div class="effect-item text-xs">英才：攻击、谋略属性提高 1.5%</div><div class="effect-item text-xs">亢厉：主动及追击武将主战法伤害提高 10.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">天资：谋略属性提高 12%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">王异, 庞统（辅助/前锋）</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-46')">
+                    <i class="fa fa-chevron-down" id="icon-normal-46"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="low" data-name="锟铻" data-forge="天资"
+                 data-treasure-type="锟铻" data-forge-effect="天资" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-47')">
+                    <h3 class="font-bold text-base">锟铻天资12</h3>
+                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">880元</div>
+                <div id="normal-47" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">稳固：防御属性提高 3.0</div><div class="effect-item text-xs">不移：受所有伤害降低 1.0%</div><div class="effect-item text-xs">英才：谋略、速度属性提高 5.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">天资：谋略属性提高 12%</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">暂无推荐，待补充</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-47')">
+                    <i class="fa fa-chevron-down" id="icon-normal-47"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
+                 data-price="high" data-name="障日" data-forge="济世"
+                 data-treasure-type="障日" data-forge-effect="济世" style="display: none;">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-48')">
+                    <h3 class="font-bold text-base">障日济世12</h3>
+                    
+                </div>
+                <div class="text-primary font-bold text-lg mb-1">询价</div>
+                <div id="normal-48" class="hidden">
+                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">坚忍：受到的主动战法伤害降低 1.0%</div><div class="effect-item text-xs">不移：受攻击伤害降低 2.0%</div><div class="effect-item text-xs">阵舞：女性武将携带时，主战法施加控制的目标，受该控制期间受到的所有伤害提高 24.0%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">济世：主战法每造成一次恢复效果，效果目标下一次受到伤害减少 12%，可叠加</div></div>
+                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">暂无推荐，待补充</div></div>
+                </div>
+                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-48')">
+                    <i class="fa fa-chevron-down" id="icon-normal-48"></i> 详情
+                </div>
+            </div>
+            
+        </div>
+
+        <!-- 分页控制 -->
+        <div id="paginationControl" class="flex justify-center items-center mt-6 hidden">
+            <button id="prevPageBtn" class="bg-gray-100 text-gray-600 px-3 py-1.5 rounded-lg mr-2 hover:bg-gray-200 transition-colors text-sm" disabled>
+                <i class="fa fa-chevron-left mr-1"></i> 上一页
+            </button>
+            <span id="pageInfo" class="text-gray-600 mx-3 text-sm">第 <span id="currentPage">1</span> 页 / 共 <span id="totalPages">1</span> 页</span>
+            <button id="nextPageBtn" class="bg-primary text-white px-3 py-1.5 rounded-lg ml-2 hover:bg-primary/90 transition-colors text-sm">
+                <i class="fa fa-chevron-right ml-1"></i> 下一页
+            </button>
+        </div>
+
+        
+    <script>
+        // 微信模态框控制函数
+        function openWechatModal() {
+            document.getElementById('wechatModal').classList.remove('hidden');
+            document.getElementById('copySuccessTip').classList.add('hidden');
+        }
+        
+        // 反馈模态框控制函数
+        function openFeedbackModal() {
+            document.getElementById('feedbackModal').classList.remove('hidden');
+            document.getElementById('feedbackSuccessTip').classList.add('hidden');
+            document.getElementById('feedbackForm').reset();
+        }
+        
+        // 微信模态框事件绑定
+        document.getElementById('pcWechatBtn').addEventListener('click', openWechatModal);
+        document.getElementById('closeWechatModal').addEventListener('click', () => {
+            document.getElementById('wechatModal').classList.add('hidden');
+        });
+        document.getElementById('copyWechatBtn').addEventListener('click', () => {
+            const tip = document.getElementById('copySuccessTip');
+            navigator.clipboard.writeText('AY5550222').then(() => {
+                tip.classList.remove('hidden');
+                setTimeout(() => tip.classList.add('hidden'), 1000);
+            }).catch(() => alert('复制失败，请手动复制：AY5550222'));
+        });
+        
+        // 反馈模态框事件绑定
+        document.getElementById('pcFeedbackBtn').addEventListener('click', openFeedbackModal);
+        document.getElementById('closeFeedbackModal').addEventListener('click', () => {
+            document.getElementById('feedbackModal').classList.add('hidden');
+        });
+        document.getElementById('feedbackForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const tip = document.getElementById('feedbackSuccessTip');
+            tip.classList.remove('hidden');
+            setTimeout(() => tip.classList.add('hidden'), 1000);
+            this.reset();
+        });
+        
+        // 回到顶部功能
+        const backToTopBtn = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            backToTopBtn.classList.toggle('hidden', window.scrollY <= 300);
+        });
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+    
+    </section>
+
+    <!-- 移动端底部导航 -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg z-40 md:hidden">
+        <div class="flex justify-around items-center h-16">
+            <a href="#treasures" class="nav-item nav-active flex flex-col items-center justify-center text-sm" data-target="treasures">
+                <i class="fa fa-list-ul text-lg mb-1"></i>
+                <span>宝物清单</span>
+            </a>
+            <a href="#recommendations" class="nav-item flex flex-col items-center justify-center text-sm" data-target="recommendations">
+                <i class="fa fa-thumbs-up text-lg mb-1"></i>
+                <span>宝物推荐</span>
+            </a>
+            <a href="#requirements" class="nav-item flex flex-col items-center justify-center text-sm" data-target="requirements">
+                <i class="fa fa-shopping-cart text-lg mb-1"></i>
+                <span>需求管理</span>
+            </a>
+            <a href="#" class="nav-item flex flex-col items-center justify-center text-sm" onclick="openWechatModal()">
+                <i class="fa fa-weixin text-lg mb-1"></i>
+                <span>微信联系</span>
+            </a>
+        </div>
+    </nav>
+    
+    <section id="recommendations" class="mb-20 module-content module-hidden">
+        <h2 class="text-xl font-bold text-neutral mb-4">宝物推荐匹配</h2>
+        <div class="bg-white rounded-xl shadow p-4 mb-4">
+            <div class="flex flex-col md:flex-row gap-3 mb-4">
+                <div class="flex-1">
+                    <label class="block text-gray-700 mb-1 text-sm">选择国家</label>
+                    <select id="countrySelect" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm">
+                        <option value="">-- 请选择国家 --</option>
+                        <option value="魏国">魏国</option><option value="蜀国">蜀国</option><option value="吴国">吴国</option><option value="汉国">汉国</option><option value="群雄">群雄</option><option value="晋国">晋国</option>
+                    </select>
+                </div>
+                <div class="flex-1">
+                    <label class="block text-gray-700 mb-1 text-sm">选择武将</label>
+                    <select id="generalSelect" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm" disabled>
+                        <option value="">-- 请先选择国家 --</option>
+                    </select>
+                </div>
+                <div class="flex-1">
+                    <label class="block text-gray-700 mb-1 text-sm">武将类型（可选）</label>
+                    <select id="generalTypeSelect" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm" disabled>
+                        <option value="">-- 请先选择武将 --</option>
+                    </select>
+                </div>
+                <div class="flex items-end">
+                    <button id="searchRecommendBtn" class="bg-primary text-white px-3 py-2 rounded-lg hover:bg-primary/90 transition-colors w-full md:w-auto text-sm" disabled>
+                        <i class="fa fa-search mr-1"></i> 查找推荐
+                    </button>
+                </div>
+            </div>
+            <div class="border-t pt-3">
+                <h3 class="font-bold text-base mb-2">推荐结果</h3>
+                <div id="recommendResult" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div class="border border-gray-200 rounded-lg p-3 flex justify-between items-center">
+                        <div><h4 class="font-semibold text-sm">暂无推荐</h4><p class="text-xs text-gray-600">请选择国家、武将并查找</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    <script>
+        // 微信模态框控制函数
+        function openWechatModal() {
+            document.getElementById('wechatModal').classList.remove('hidden');
+            document.getElementById('copySuccessTip').classList.add('hidden');
+        }
+        
+        // 反馈模态框控制函数
+        function openFeedbackModal() {
+            document.getElementById('feedbackModal').classList.remove('hidden');
+            document.getElementById('feedbackSuccessTip').classList.add('hidden');
+            document.getElementById('feedbackForm').reset();
+        }
+        
+        // 微信模态框事件绑定
+        document.getElementById('pcWechatBtn').addEventListener('click', openWechatModal);
+        document.getElementById('closeWechatModal').addEventListener('click', () => {
+            document.getElementById('wechatModal').classList.add('hidden');
+        });
+        document.getElementById('copyWechatBtn').addEventListener('click', () => {
+            const tip = document.getElementById('copySuccessTip');
+            navigator.clipboard.writeText('AY5550222').then(() => {
+                tip.classList.remove('hidden');
+                setTimeout(() => tip.classList.add('hidden'), 1000);
+            }).catch(() => alert('复制失败，请手动复制：AY5550222'));
+        });
+        
+        // 反馈模态框事件绑定
+        document.getElementById('pcFeedbackBtn').addEventListener('click', openFeedbackModal);
+        document.getElementById('closeFeedbackModal').addEventListener('click', () => {
+            document.getElementById('feedbackModal').classList.add('hidden');
+        });
+        document.getElementById('feedbackForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const tip = document.getElementById('feedbackSuccessTip');
+            tip.classList.remove('hidden');
+            setTimeout(() => tip.classList.add('hidden'), 1000);
+            this.reset();
+        });
+        
+        // 回到顶部功能
+        const backToTopBtn = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            backToTopBtn.classList.toggle('hidden', window.scrollY <= 300);
+        });
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+    
+    </section>
+    
+    <section id="requirements" class="mb-20 module-content module-hidden">
+        <div id="matchAlert" class="hidden bg-red-100 text-red-700 p-2 rounded-lg mb-4 text-center font-medium text-sm">
+            <i class="fa fa-bell mr-1"></i> 有 0 个客户需求匹配到新宝物！
+        </div>
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold text-neutral">客户需求管理</h2>
+            <button class="bg-secondary text-white px-3 py-1.5 rounded-lg hover:bg-secondary/90 transition-colors text-sm">
+                <i class="fa fa-plus mr-1"></i> 添加需求
+            </button>
+        </div>
+        <div class="bg-white rounded-xl shadow p-4 mb-6">
+            <h3 class="font-bold text-base mb-3">提交宝物需求</h3>
+            <form id="demandForm" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-gray-700 mb-1 text-sm">需要宝物 <span class="text-red-500">*</span></label>
+                    <select id="demandTreasure" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm" required>
+                        <option value="">-- 请选择宝物 --</option>
+                        <option value="屈卢">屈卢</option><option value="狰角枪">狰角枪</option><option value="真刚">真刚</option><option value="彤素">彤素</option><option value="博浪">博浪</option><option value="游飘">游飘</option><option value="承影">承影</option><option value="涂氏匕首">涂氏匕首</option><option value="掩日">掩日</option><option value="少府">少府</option><option value="大将">大将</option><option value="仁风">仁风</option><option value="龙鳞">龙鳞</option><option value="貔貅">貔貅</option><option value="比翼">比翼</option><option value="障日">障日</option><option value="旌阳万仞">旌阳万仞</option><option value="悬翦">悬翦</option><option value="泰阿">泰阿</option><option value="别铭">别铭</option><option value="铭鸿">铭鸿</option><option value="沧海">沧海</option><option value="大橹">大橹</option><option value="惊鲵">惊鲵</option><option value="钜黍">钜黍</option><option value="锟铻">锟铻</option><option value="冥山勾月">冥山勾月</option><option value="戚">戚</option><option value="千钧">千钧</option><option value="神锋">神锋</option><option value="螣蛇">螣蛇</option><option value="乌号">乌号</option><option value="星汉">星汉</option><option value="元戎">元戎</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1 text-sm">需要词条 <span class="text-red-500">*</span></label>
+                    <select id="demandForge" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm" required disabled>
+                        <option value="">-- 请先选择宝物 --</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1 text-sm">词条档位 <span class="text-red-500">*</span></label>
+                    <select id="demandLevel" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm" required disabled>
+                        <option value="">-- 请先选择词条 --</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1 text-sm">微信号 <span class="text-red-500">*</span></label>
+                    <input type="text" id="demandWechat" placeholder="请输入微信号" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm" required>
+                </div>
+                <div class="md:col-span-2">
+                    <button type="submit" class="bg-secondary text-white px-4 py-2 rounded-lg hover:bg-secondary/90 transition-colors text-sm">
+                        <i class="fa fa-paper-plane mr-1"></i> 提交需求
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="bg-white rounded-xl shadow overflow-hidden">
+            <table class="min-w-full divide-y divide-gray-200 text-sm">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">客户信息</th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">需求宝物</th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">需求词条</th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">词条档位</th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
+                        <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+                    </tr>
+                </thead>
+                <tbody id="demandList" class="bg-white divide-y divide-gray-200"></tbody>
+            </table>
+        </div>
+        
+    <script>
+        // 微信模态框控制函数
+        function openWechatModal() {
+            document.getElementById('wechatModal').classList.remove('hidden');
+            document.getElementById('copySuccessTip').classList.add('hidden');
+        }
+        
+        // 反馈模态框控制函数
+        function openFeedbackModal() {
+            document.getElementById('feedbackModal').classList.remove('hidden');
+            document.getElementById('feedbackSuccessTip').classList.add('hidden');
+            document.getElementById('feedbackForm').reset();
+        }
+        
+        // 微信模态框事件绑定
+        document.getElementById('pcWechatBtn').addEventListener('click', openWechatModal);
+        document.getElementById('closeWechatModal').addEventListener('click', () => {
+            document.getElementById('wechatModal').classList.add('hidden');
+        });
+        document.getElementById('copyWechatBtn').addEventListener('click', () => {
+            const tip = document.getElementById('copySuccessTip');
+            navigator.clipboard.writeText('AY5550222').then(() => {
+                tip.classList.remove('hidden');
+                setTimeout(() => tip.classList.add('hidden'), 1000);
+            }).catch(() => alert('复制失败，请手动复制：AY5550222'));
+        });
+        
+        // 反馈模态框事件绑定
+        document.getElementById('pcFeedbackBtn').addEventListener('click', openFeedbackModal);
+        document.getElementById('closeFeedbackModal').addEventListener('click', () => {
+            document.getElementById('feedbackModal').classList.add('hidden');
+        });
+        document.getElementById('feedbackForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const tip = document.getElementById('feedbackSuccessTip');
+            tip.classList.remove('hidden');
+            setTimeout(() => tip.classList.add('hidden'), 1000);
+            this.reset();
+        });
+        
+        // 回到顶部功能
+        const backToTopBtn = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            backToTopBtn.classList.toggle('hidden', window.scrollY <= 300);
+        });
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+    
+    </section>
+    
+    </main>
+
+    <!-- 底部导航 -->
+    <footer class="bg-white border-t py-6">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <p class="text-gray-600 text-sm">© 2025 率土之滨宝物助手. 保留所有权利.</p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-500 hover:text-primary transition-colors"><i class="fa fa-question-circle"></i> 帮助</a>
+                    <a href="#" class="text-gray-500 hover:text-primary transition-colors"><i class="fa fa-cog"></i> 设置</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript 由Python脚本注入 -->
+
+    <script>
+        // 全局配置
+        const FORGE_LEVELS = {"骁锐": ["5%", "10%", "15%"], "陷阵": ["10%", "20%", "30%"], "强击": ["10%", "20%", "30%"], "奔袭": ["3%", "6%", "9%"], "破敌": ["10%", "15%", "20%"], "无畏": ["10%", "20%", "30%"], "至策": ["10%", "15%", "20%"], "坚忍": ["10%", "15%", "20%"]};
+        const CURRENT_TREASURES = [{"name": "乌号", "forge": "亢厉"}, {"name": "乌号", "forge": "至策"}, {"name": "乌号", "forge": "击虚"}, {"name": "冥山勾月", "forge": "破敌"}, {"name": "别铭", "forge": "仁心"}, {"name": "别铭", "forge": "坚忍"}, {"name": "别铭", "forge": "灵动"}, {"name": "博浪", "forge": "艮止"}, {"name": "博浪", "forge": "艮止"}, {"name": "博浪", "forge": "坚忍"}, {"name": "博浪", "forge": "灵动"}, {"name": "少府", "forge": "奔袭"}, {"name": "少府", "forge": "无畏"}, {"name": "屈卢", "forge": "坚毅"}, {"name": "屈卢", "forge": "奔袭"}, {"name": "屈卢", "forge": "无畏"}, {"name": "屈卢", "forge": "无畏"}, {"name": "屈卢", "forge": "陷阵"}, {"name": "屈卢", "forge": "骁锐"}, {"name": "彤素", "forge": "善谋"}, {"name": "彤素", "forge": "至策"}, {"name": "彤素", "forge": "破敌"}, {"name": "徐氏匕首", "forge": "天资"}, {"name": "悬翦", "forge": "骁锐"}, {"name": "戚", "forge": "陷阵"}, {"name": "戚", "forge": "奔袭"}, {"name": "掩日", "forge": "至策"}, {"name": "掩日", "forge": "天资"}, {"name": "掩日", "forge": "至策"}, {"name": "掩日", "forge": "天资"}, {"name": "比翼", "forge": "不屈"}, {"name": "比翼", "forge": "惑言"}, {"name": "比翼", "forge": "艮止"}, {"name": "沧海", "forge": "威势"}, {"name": "泰阿", "forge": "坚忍"}, {"name": "游飘", "forge": "筹算"}, {"name": "游飘", "forge": "颖悟"}, {"name": "狰角枪", "forge": "无畏"}, {"name": "狰角枪", "forge": "奔袭"}, {"name": "真刚", "forge": "至策"}, {"name": "貔貅", "forge": "奔袭"}, {"name": "钜黍", "forge": "天资"}, {"name": "钜黍", "forge": "亢厉"}, {"name": "铭鸿", "forge": "亢厉"}, {"name": "铭鸿", "forge": "英勇"}, {"name": "铭鸿", "forge": "天资"}, {"name": "锟铻", "forge": "天资"}, {"name": "障日", "forge": "济世"}];
+        const GENERAL_TREASURE_RECOMMENDATIONS = {"魏国": {"曹操": {"千元上": ["徐氏匕首天资", "大将灵动"], "千元下": ["大将坚忍", "大将强韧", "大将沉稳", "仁风坚忍", "别铭坚忍"], "垃圾粉": []}, "张辽": {"攻其工具": {"千元上": ["承影天资"], "千元下": ["狰角枪无畏", "狰角枪奔袭", "承影颖悟"], "垃圾粉": ["游飘灵动"]}, "前锋抗伤": {"千元上": ["大将灵动"], "千元下": ["大将坚忍", "大将强韧", "大将沉稳", "仁风坚忍", "别铭坚忍"], "垃圾粉": ["游飘灵动"]}}, "王异": {"千元上": ["铭鸿筹算"], "千元下": ["狰角枪无畏", "狰角枪奔袭", "钜黍亢历", "铭鸿亢历", "铭鸿天资"], "垃圾粉": []}, "荀彧": {"神赏工具": {"千元上": ["承影天资", "游飘天资"], "千元下": [], "垃圾粉": []}, "法系输出": {"千元上": ["游飘筹算", "承影筹算"], "千元下": ["游飘颖悟", "承影颖悟"], "垃圾粉": ["游飘眩惑"]}}, "魏贾诩": {"千元上": [], "千元下": ["游飘颖悟"], "垃圾粉": []}, "郭嘉": {"千元上": ["别铭机敏", "别铭惑言"], "千元下": [], "垃圾粉": []}, "荀攸": {"千元上": ["别铭机敏"], "千元下": [], "垃圾粉": []}, "荀彧&荀攸": {"千元上": ["别铭艮止"], "千元下": [], "垃圾粉": []}, "司马懿": {"千元上": [], "千元下": ["游飘颖悟"], "垃圾粉": []}, "张春华": {"千元上": [], "千元下": ["仁风机敏"], "垃圾粉": []}, "郝昭": {"双控": {"千元上": ["游飘天资"], "千元下": ["游飘颖悟"], "垃圾粉": ["游飘灵动"]}, "纯肉": {"千元上": ["博浪坚忍"], "千元下": ["大将坚忍"], "垃圾粉": []}, "先驱三军": {"千元上": [], "千元下": ["少府骁锐", "屈卢骁锐"], "垃圾粉": []}}, "夏侯渊": {"千元上": ["彤素骁锐"], "千元下": ["彤素至策"], "垃圾粉": []}, "夏侯惇": {"千元上": [], "千元下": ["惊鲵坚忍", "戚坚忍"], "垃圾粉": []}}, "蜀国": {"刘备": {"千元上": ["博浪仁心", "博浪坚忍", "博浪艮止"], "千元下": [], "垃圾粉": []}, "刘禅": {"千元上": [], "千元下": [], "垃圾粉": []}, "黄月英": {"输出": {"千元上": ["旌阳万仞天资"], "千元下": ["旌阳万仞眩惑", "旌阳万仞颖悟"], "垃圾粉": ["游飘眩惑"]}, "肉队": {"千元上": ["博浪仁心", "博浪艮止"], "千元下": ["博浪灵动"], "垃圾粉": []}}, "弓诸葛亮": {"千元上": ["徐氏匕首天资"], "千元下": ["游飘颖悟"], "垃圾粉": []}, "步诸葛亮（辅助）": {"千元上": ["别铭机敏", "别铭艮止"], "千元下": [], "垃圾粉": []}, "庞统": {"大营输出": {"千元上": ["游飘筹算", "游飘天资"], "千元下": ["游飘颖悟"], "垃圾粉": []}, "辅助/前锋": {"千元上": ["铭鸿筹算"], "千元下": ["铭鸿天资"], "垃圾粉": []}}, "法正": {"千元上": ["仁风灵动"], "千元下": ["仁风坚忍", "别铭坚忍", "别铭灵动"], "垃圾粉": []}, "徐庶": {"千元上": [], "千元下": ["狰角枪无畏"], "垃圾粉": []}, "关羽": {"千元上": ["掩日熟虑"], "千元下": ["钜黍熟虑"], "垃圾粉": ["掩日至策", "掩日亢历"]}, "关银屏": {"千元上": ["滕蛇亢历", "腾蛇至策"], "千元下": ["彤素至策", "悬翦至策", "彤素破敌", "悬翦破敌"], "垃圾粉": ["彤素善谋"]}, "张飞": {"千元上": ["掩日熟虑", "腾蛇熟虑"], "千元下": [], "垃圾粉": ["掩日至策", "掩日亢历"]}, "张姬": {"千元上": ["彤素英勇"], "千元下": ["彤素至策", "彤素破敌"], "垃圾粉": []}, "关平&张飞": {"通用关张组合": {"千元上": [], "千元下": ["戚陷阵", "戚骁锐"], "垃圾粉": []}, "肉队前锋组合": {"千元上": ["博浪清毅"], "千元下": [], "垃圾粉": []}}, "夏侯霸": {"千元上": ["博浪坚忍"], "千元下": ["惊鲵坚忍", "惊鲵破敌"], "垃圾粉": []}, "赵云": {"前锋": {"千元上": [], "千元下": ["惊鲵坚忍", "惊鲵破敌"], "垃圾粉": ["彤素坚忍"]}, "物理大营": {"千元上": ["彤素英勇", "掩日熟虑"], "千元下": ["彤素至策", "彤素破敌"], "垃圾粉": ["彤素善谋"]}}, "SP 赵云": {"千元上": [], "千元下": ["彤素至策", "彤素破敌"], "垃圾粉": ["彤素坚忍"]}, "黄忠": {"千元上": [], "千元下": ["惊鲵破敌"], "垃圾粉": []}, "魏延": {"千元上": ["戚骁锐", "彤素骁锐"], "千元下": ["戚破敌", "彤素破敌"], "垃圾粉": ["彤素坚忍"]}, "马岱": {"千元上": ["彤素骁锐"], "千元下": ["屈卢骁锐", "屈卢陷阵"], "垃圾粉": []}, "马云禄": {"千元上": [], "千元下": ["屈卢骁锐", "屈卢奔袭", "屈卢无畏", "屈卢陷阵", "狰角枪骁锐", "狰角枪奔袭", "狰角枪无畏", "狰角枪陷阵"], "垃圾粉": []}, "严颜": {"千元上": ["博浪坚忍", "大将稳固"], "千元下": ["大将坚忍", "大将强韧", "大将沉稳"], "垃圾粉": []}, "姜维": {"千元上": ["博浪机敏", "博浪清毅"], "千元下": [], "垃圾粉": []}, "沙摩柯": {"千元上": ["掩日熟虑"], "千元下": [], "垃圾粉": []}, "祝融": {"千元上": [], "千元下": ["少府陷阵", "少府骁锐"], "垃圾粉": []}, "周仓": {"千元上": [], "千元下": ["戚骁锐", "惊鲵骁锐", "戚破敌", "惊鲵破敌"], "垃圾粉": []}}, "吴国": {"孙坚（前锋）": {"千元上": ["惊鲵骁锐"], "千元下": ["戚陷阵", "戚骁锐"], "垃圾粉": []}, "步皇后": {"千元上": [], "千元下": ["泰阿强韧"], "垃圾粉": ["泰阿坚忍"]}, "孙鲁班": {"千元上": ["徐氏匕首筹算", "徐氏匕首天资"], "千元下": [], "垃圾粉": []}, "孙策": {"千元上": ["惊鲵骁锐"], "千元下": ["戚破敌", "惊鲵破敌", "戚骁锐"], "垃圾粉": []}, "大乔": {"千元上": ["游飘筹算", "游飘天资"], "千元下": ["游飘颖悟"], "垃圾粉": []}, "孙尚香": {"千元上": ["掩日熟虑"], "千元下": [], "垃圾粉": []}, "陆逊": {"千元上": ["掩日熟虑"], "千元下": [], "垃圾粉": []}, "陆抗": {"千元上": ["博浪仁心", "博浪坚忍"], "千元下": [], "垃圾粉": []}, "周瑜": {"神赏工具": {"千元上": [], "千元下": [], "垃圾粉": ["掩日天资"]}, "大营输出": {"千元上": ["掩日熟虑"], "千元下": [], "垃圾粉": []}}, "小乔": {"千元上": ["仁风灵动", "仁风惑言"], "千元下": ["比翼稳固", "比翼垦止"], "垃圾粉": []}, "周姬": {"千元上": [], "千元下": [], "垃圾粉": ["旌阳万仞驱火"]}, "吕蒙": {"千元上": ["承影天资"], "千元下": ["承影颖悟", "游飘颖悟", "承影灵动"], "垃圾粉": []}, "周泰": {"前锋双主动": {"千元上": ["博浪坚忍", "博浪清毅"], "千元下": [], "垃圾粉": []}, "桃园利兵": {"千元上": ["博浪仁心", "博浪坚忍"], "千元下": [], "垃圾粉": []}}, "甘宁": {"法刀输出": {"千元上": [], "千元下": ["真刚至策", "真刚破敌"], "垃圾粉": []}, "物理大营": {"千元上": ["彤素英勇"], "千元下": ["彤素至策", "彤素破敌"], "垃圾粉": []}}, "张昭": {"千元上": ["承影天资"], "千元下": [], "垃圾粉": []}, "诸葛恪": {"千元上": [], "千元下": ["大将坚忍", "大将强韧"], "垃圾粉": []}, "程普": {"千元上": ["博浪坚忍"], "千元下": [], "垃圾粉": []}, "黄盖": {"千元上": ["冥山勾月英勇"], "千元下": [], "垃圾粉": ["冥山勾月坚忍"]}, "太史慈": {"千元上": [], "千元下": ["屈卢骁锐", "屈卢奔袭", "屈卢无畏", "屈卢陷阵", "狰角枪骁锐", "狰角枪奔袭", "狰角枪无畏", "狰角枪陷阵"], "垃圾粉": []}, "蒋钦": {"千元上": [], "千元下": ["狰角枪无畏", "狰角枪奔袭"], "垃圾粉": []}, "凌统": {"千元上": ["真刚骁锐"], "千元下": ["真刚破敌"], "垃圾粉": []}, "小乔&大乔": {"千元上": ["别铭机敏", "别铭清毅"], "千元下": [], "垃圾粉": []}, "孙权": {"千元上": ["别铭机敏"], "千元下": [], "垃圾粉": []}}, "汉国": {"灵帝": {"法刀": {"千元上": ["承影天资"], "千元下": ["承影颖悟"], "垃圾粉": ["游飘眩惑"]}, "追击": {"千元上": [], "千元下": ["狰角枪陷阵", "狰角枪无畏"], "垃圾粉": []}, "物理": {"千元上": [], "千元下": ["少府陷阵", "少府骁锐"], "垃圾粉": []}}, "何太后": {"千元上": ["徐氏匕首天资", "别铭灵动"], "千元下": [], "垃圾粉": []}, "十常侍": {"千元上": ["承影天资", "旌阳万仞天资"], "千元下": ["承影颖悟", "旌阳万仞颖悟"], "垃圾粉": []}, "朱儁": {"千元上": ["承影天资"], "千元下": ["承影灵动"], "垃圾粉": []}, "皇甫嵩": {"前锋反击": {"千元上": ["博浪清毅", "博浪坚忍"], "千元下": [], "垃圾粉": []}, "先驱输出": {"千元上": [], "千元下": ["戚骁锐"], "垃圾粉": []}}, "卢植": {"千元上": ["徐氏匕首筹算"], "千元下": [], "垃圾粉": []}, "汉董卓": {"千元上": ["博浪坚忍"], "千元下": [], "垃圾粉": []}, "汉吕布": {"千元上": [], "千元下": ["彤素至策", "彤素破敌"], "垃圾粉": []}, "汉貂蝉": {"千元上": ["乌号熟虑", "掩日熟虑"], "千元下": [], "垃圾粉": []}, "袁绍": {"千元上": [], "千元下": ["惊鲵坚忍", "冥山勾月坚忍"], "垃圾粉": []}, "潘凤": {"千元上": [], "千元下": ["惊鲵坚忍", "冥山勾月坚忍"], "垃圾粉": []}, "刘表": {"千元上": ["承影天资"], "千元下": [], "垃圾粉": []}, "张机": {"肉步": {"千元上": ["博浪仁心", "仁风仁心", "博浪坚忍"], "千元下": ["仁风坚忍"], "垃圾粉": []}, "非肉": {"千元上": ["仁风仁心"], "千元下": ["仁风坚忍", "别铭坚忍", "别铭仁心"], "垃圾粉": []}, "神赏": {"千元上": ["徐氏匕首天资", "别铭垦止"], "千元下": [], "垃圾粉": []}}, "华佗": {"千元上": ["仁风仁心", "仁风艮止"], "千元下": ["别铭仁心"], "垃圾粉": []}, "蔡文姬": {"千元上": ["仁风仁心", "仁风艮止"], "千元下": ["别铭仁心"], "垃圾粉": []}, "王昭君": {"千元上": ["仁风仁心", "仁风艮止"], "千元下": [], "垃圾粉": []}, "汉司马懿": {"千元上": ["游飘筹算"], "千元下": ["游飘颖悟"], "垃圾粉": []}}, "群雄": {"田丰": {"千元上": [], "千元下": ["旌阳万仞颖悟", "游飘颖悟", "旌阳万仞驱火", "游飘驱火"], "垃圾粉": []}, "褒姒": {"千元上": ["承影天资"], "千元下": ["大将坚忍", "大将强韧"], "垃圾粉": []}, "妹喜": {"千元上": ["承影天资"], "千元下": ["大将坚忍", "大将强韧"], "垃圾粉": []}, "骊姬": {"千元上": ["承影天资"], "千元下": ["大将坚忍", "大将强韧"], "垃圾粉": []}, "妲己": {"千元上": ["承影天资"], "千元下": [], "垃圾粉": []}, "西施": {"千元上": ["仁风仁心", "仁风艮止"], "千元下": [], "垃圾粉": []}, "千吉": {"千元上": [], "千元下": ["大将坚忍", "大将强韧"], "垃圾粉": []}, "轲比能": {"千元上": [], "千元下": ["戚骁锐"], "垃圾粉": ["戚坚忍"]}, "兀突骨": {"千元上": [], "千元下": ["少府骁锐", "少府陷阵"], "垃圾粉": []}, "木鹿大王": {"物理": {"千元上": [], "千元下": ["少府骁锐", "少府陷阵"], "垃圾粉": []}, "谋略": {"千元上": ["承影天资"], "千元下": ["承影颖悟"], "垃圾粉": []}}, "祝融（群）": {"千元上": [], "千元下": ["大将坚忍", "大将强韧"], "垃圾粉": []}, "孟获": {"千元上": [], "千元下": ["大将坚忍", "大将强韧"], "垃圾粉": []}, "张宁": {"千元上": ["承影天资"], "千元下": ["承影颖悟", "承影灵动", "腾蛇至策", "腾蛇亢历"], "垃圾粉": []}, "袁绍": {"千元上": [], "千元下": ["真刚至策", "真刚破敌"], "垃圾粉": []}, "张角": {"千元上": ["掩日熟虑"], "千元下": ["游飘颖悟"], "垃圾粉": ["掩日至策", "掩日亢厉"]}, "张绣": {"千元上": [], "千元下": ["乌号亢历", "匕首亢历"], "垃圾粉": []}, "群吕布（鬼吕）": {"千元上": ["彤素英勇"], "千元下": ["彤素至策", "彤素破敌"], "垃圾粉": []}, "公孙瓒": {"双追": {"千元上": [], "千元下": ["屈卢无畏"], "垃圾粉": []}, "辅助": {"千元上": ["别铭机敏"], "千元下": [], "垃圾粉": []}}, "甄洛": {"千元上": [], "千元下": ["比翼垦止", "比翼稳固", "别铭坚忍", "别铭仁心", "仁风坚忍"], "垃圾粉": []}, "颜良&文丑": {"千元上": [], "千元下": ["彤素至策"], "垃圾粉": []}, "华雄": {"千元上": ["彤素英勇"], "千元下": ["彤素至策", "彤素破敌"], "垃圾粉": []}, "白玉蝉（输出）": {"千元上": ["徐氏匕首筹算"], "千元下": [], "垃圾粉": []}, "马超": {"千元上": ["钜黍骁锐"], "千元下": ["狰角枪骁锐", "狰角枪无畏", "屈卢骁锐", "屈卢陷阵", "屈卢无畏", "屈卢奔袭"], "垃圾粉": []}, "高顺": {"常规": {"千元上": [], "千元下": ["彤素至策", "彤素破敌"], "垃圾粉": []}, "小控": {"千元上": [], "千元下": ["承影筹算", "承影天资"], "垃圾粉": []}}, "陈宫（神赏）": {"千元上": ["游飘筹算", "徐氏匕首天资", "别铭灵动"], "千元下": ["游飘颖悟"], "垃圾粉": []}, "貂蝉（群）": {"千元上": [], "千元下": ["别铭坚忍"], "垃圾粉": []}, "吕姬": {"千元上": ["惊鲵英勇"], "千元下": ["惊鲵破敌"], "垃圾粉": []}, "庞德": {"千元上": ["真刚骁锐"], "千元下": ["真刚破敌"], "垃圾粉": []}}, "晋国": {"杜预": {"千元上": [], "千元下": ["铭鸿天资", "钜黍天资", "真刚破敌", "屈卢晓锐"], "垃圾粉": []}}};
+        const TREASURE_FORGE_DATA = {"宝物对应词条": {"屈卢": ["骁锐", "陷阵", "强击", "奔袭", "坚毅", "无畏"], "狰角枪": ["骁锐", "陷阵", "强击", "奔袭", "坚毅", "无畏"], "真刚": ["骁锐", "至策", "破敌", "英勇", "善谋", "坚忍"], "彤素": ["骁锐", "至策", "破敌", "英勇", "善谋", "坚忍"], "博浪": ["灵动", "机敏", "清毅", "仁心", "坚忍", "艮止", "惑言"], "游飘": ["灵动", "天资", "颖悟", "驱火", "炫惑", "筹算"], "承影": ["灵动", "天资", "颖悟", "驱火", "炫惑", "筹算"], "涂氏匕首": ["骁锐", "天资", "筹算", "识破", "亢厉", "英勇"], "掩日": ["熟虑", "天资", "亢厉", "至策", "骁锐", "击虚"], "少府": ["骁锐", "陷阵", "强击", "奔袭", "坚毅", "无畏"], "大将": ["机敏", "灵动", "坚忍", "沉稳", "稳固", "强韧", "清毅"], "仁风": ["灵动", "机敏", "清毅", "仁心", "坚忍", "艮止", "惑言"], "龙鳞": ["坚毅", "天资", "选锋", "蓄锐", "骁锐", "奔袭"], "貔貅": ["坚毅", "天资", "选锋", "蓄锐", "骁锐", "奔袭"], "比翼": ["艮止", "惑言", "稳固", "机敏", "济世", "威势", "不屈"], "障日": ["艮止", "惑言", "稳固", "机敏", "济世", "威势", "不屈"], "旌阳万仞": ["灵动", "天资", "颖悟", "驱火", "炫惑", "筹算"], "悬翦": ["骁锐", "天资", "筹算", "识破", "亢厉", "英勇"], "泰阿": ["机敏", "灵动", "坚忍", "沉稳", "稳固", "强韧", "清毅"], "别铭": ["灵动", "机敏", "清毅", "仁心", "坚忍", "艮止", "惑言"], "铭鸿": ["骁锐", "天资", "筹算", "识破", "亢厉", "英勇"], "沧海": ["戒备", "济世", "坚忍", "不屈", "不懈", "威势"], "大橹": ["机敏", "艮止", "稳固", "济世", "不屈", "惑言", "威势"], "惊鲵": ["骁锐", "至策", "破敌", "英勇", "善谋", "坚忍"], "钜黍": ["骁锐", "天资", "击虚", "至策", "亢厉", "熟虑"], "锟铻": ["骁锐", "天资", "筹算", "识破", "亢厉", "英勇"], "冥山勾月": ["骁锐", "至策", "破敌", "英勇", "善谋", "坚忍"], "戚": ["骁锐", "陷阵", "强击", "奔袭", "坚毅", "无畏"], "千钧": ["机敏", "灵动", "稳固", "济世", "不屈", "惑言", "威势"], "神锋": ["坚毅", "天资", "选锋", "蓄锐", "骁锐", "奔袭"], "螣蛇": ["熟虑", "天资", "亢厉", "至策", "骁锐", "击虚"], "乌号": ["熟虑", "天资", "亢厉", "至策", "骁锐", "击虚"], "星汉": ["戒备", "济世", "坚忍", "不屈", "不懈", "威势"], "元戎": ["坚毅", "天资", "选锋", "蓄锐", "骁锐", "奔袭"]}, "词条档位": {"奔袭": ["7%（普通粉）", "8%（粉极）", "9%（红极）"], "破敌": ["17%（普通粉）", "18%（粉极）", "20%（红极）"], "强击": ["4（粉极）", "5（红极）"], "骁锐": ["12%（普通粉）", "13%（粉极）", "15%（红极）"], "陷阵": ["24%（普通粉）", "26%（粉极）", "30%（红极）"], "无畏": ["24%（普通粉）", "26%（粉极）", "30%（红极）"], "至策": ["17%（普通粉）", "18%（粉极）", "20%（红极）"], "不屈": ["7%（普通粉）", "8%（粉极）", "9%（红极）"], "沉稳": ["17%（普通粉）", "18%（粉极）", "20%（红极）"], "艮止": ["24%（普通粉）", "26%（粉极）", "30%（红极）"], "惑言": ["3（粉极）", "4（红极）"], "坚忍": ["17%（普通粉）", "18%（粉极）", "20%（红极）"], "坚毅": ["5（粉极）", "6（红极）"], "强韧": ["17%（普通粉）", "18%（粉极）", "20%（红极）"], "稳固": ["17%（普通粉）", "18%（粉极）", "20%（红极）"], "威势": ["17%（普通粉）", "18%（粉极）", "20%（红极）"], "筹算": ["12%（普通粉）", "13%（粉极）", "15%（红极）"], "驱火": ["24%（普通粉）", "26%（粉极）", "30%（红极）"], "济世": ["12%（普通粉）", "13%（粉极）", "15%（红极）"], "天资": ["12%（普通粉）", "13%（粉极）", "15%（红极）"], "颖悟": ["17%（普通粉）", "18%（粉极）", "20%（红极）"], "炫惑": ["24%（普通粉）", "26%（粉极）", "30%（红极）"], "英勇": ["12%（普通粉）", "13%（粉极）", "15%（红极）"], "机敏": ["7%（普通粉）", "8%（粉极）", "9%（红极）"], "灵动": ["24%（普通粉）", "26%（粉极）", "30%（红极）"], "仁心": ["12%（普通粉）", "13%（粉极）", "15%（红极）"], "识破": ["3（粉极）", "4（红极）"], "蓄锐": ["12%（普通粉）", "13%（粉极）", "15%（红极）"], "选锋": ["24%（普通粉）", "26%（粉极）", "30%（红极）"], "清毅": ["5-7（粉极）", "5-8（红极）"], "击虚": ["7%（普通粉）", "8%（粉极）", "9%（红极）"], "熟虑": ["16%（普通粉）", "18%（粉极）", "20%（红极）"], "亢厉": ["24%（普通粉）", "26%（粉极）", "30%（红极）"], "戒备": ["24%（普通粉）", "26%（粉极）", "30%（红极）"], "不懈": ["7%（普通粉）", "8%（粉极）", "9%（红极）"], "善谋": ["24%（普通粉）", "26%（粉极）", "30%（红极）"]}};
+        const BASE_EFFECTS = {"屈卢": ["骁锐：攻击属性提高 2.0", "无畏：追击战法伤害提高 1.0%", "破敌：造成的攻击伤害无视目标 10.0% 的防御属性"], "狰角枪": ["无畏：追击战法伤害提高 1.0%", "骁锐：攻击属性提高 3.0", "陷阵：普通攻击伤害提高 12.0%"], "真刚": ["破敌：造成的攻击伤害无视目标 1.0% 的防御属性", "骁锐：攻击属性提高 3.0", "盛气：正式回合后，前 2 回合造成的攻击伤害提高 20.0%"], "彤素": ["骁锐：攻击属性提高 2.5", "亢厉：主动及追击武将主战法伤害提高 1.0%", "奇袭：与目标距离每提高 1，造成的攻击伤害提高 3.0%"], "博浪": ["妄贞：混乱、暴走、怯战、犹豫状态下受伤降低 1.0%", "坚忍：受到的主动战法伤害降低 2.0%", "抖擞：自身受到的恢复效果提高 25.0%"], "游飘": ["先知：受策略伤害降低 1.0%", "妙算：主动战法的策略伤害提高 1.0%", "颖悟：造成的策略伤害无视目标 10.0% 的谋略属性"], "承影": ["骁锐：攻击属性提高 2.5", "天资：谋略属性提高 2.5", "机先：正式回合后，前 2 次造成的策略伤害提高 20.0%"], "徐氏匕首": ["灵动：速度属性提高 1.5", "破敌：造成的攻击伤害无视目标 1.5% 的防御属性", "英才：攻击、谋略属性提高 5.0%"], "掩日": ["稳固：防御属性提高 1.5", "亢厉：主动武将主战法伤害提高 1.0%", "谋断：第 2 次发动需要准备的主动武将主战法时，跳过 1 个准备回合"], "少府": ["骁锐：攻击属性提高 2.0", "陷阵：前 4 回合普通攻击伤害提高 2.0%", "再战：第 5 回合有 50% 几率获得连击效果"], "大将": ["稳固：防御属性提高 1.0%", "强韧：受到的普通攻击伤害降低 2.0%", "护主：战斗开始后前 2 回合，援护我军大营"], "仁风": ["先知：受策略伤害降低 1.0%", "灵动：速度属性提高 2.0", "天资：谋略属性提高 8.0%"], "龙鳞": ["灵动：速度属性提高 1.5", "亢厉：追击武将主战法伤害提高 2.0%", "慑心：追击武将主战法施加的控制效果（混乱 \\ 暴走 \\ 怯战犹豫）增加 1 回合"], "貔貅": ["坚忍：受到的主动战法伤害降低 1.0%", "骁锐：攻击属性提高 2.0", "迅猛：处于连击状态时，普通攻击伤害提高 20.0%"], "比翼": ["稳固：防御属性提高 1.0", "天资：谋略属性提高 1.5", "矜节：女性武将携带时，主战法造成的恢复效果提高 30.0%"], "障日": ["坚忍：受到的主动战法伤害降低 1.0%", "不移：受攻击伤害降低 2.0%", "阵舞：女性武将携带时，主战法施加控制的目标，受该控制期间受到的所有伤害提高 24.0%"], "旌阳万仞": ["先知：受策略伤害降低 1.0%", "妙算：主动战法的策略伤害提高 1.0%", "颖悟：造成的策略伤害无视目标 10.0% 的谋略属性"], "悬翦": ["稳固：防御属性提高 1.5%", "骁锐：攻击属性提高 1.0%", "亢厉：主动战法的攻击伤害提高 10.0%"], "泰阿": ["稳固：防御属性提高 3.0", "强韧：受到的普通攻击伤害降低 2.0%", "护主：战斗开始后前 2 回合，援护我军大营"], "别铭": ["稳固：防御属性提高 3.0", "不移：受所有伤害降低 1.0%", "英才：谋略、速度属性提高 5.0%"], "铭鸿": ["稳固：防御属性提高 3.0", "英才：攻击、谋略属性提高 1.5%", "亢厉：主动及追击武将主战法伤害提高 10.0%"], "沧海": ["稳固：防御属性提高 1.5", "妙算：主动战法的策略伤害提高 1.0%", "机先：正式回合后，前 2 次策略伤害提高 20.0%"], "大橹": ["稳固：防御属性提高 3.0", "强韧：受到的普通攻击伤害降低 2.0%", "护主：战斗前 2 回合援护我军大营"], "惊鲵": ["骁锐：攻击属性提高 2.5", "亢厉：主动及追击武将主战法伤害提高 1.0%", "奇袭：与目标距离每 + 1，攻击伤害 + 3.0%"], "钜黍": ["稳固：防御属性提高 1.5", "骁锐：攻击属性提高 1.0%", "亢厉：主动战法的攻击伤害提高 10.0%"], "锟铻": ["稳固：防御属性提高 3.0", "不移：受所有伤害降低 1.0%", "英才：谋略、速度属性提高 5.0%"], "冥山勾月": ["稳固：防御属性提高 3.0", "英才：攻击、谋略属性提高 1.5%", "亢厉：主动及追击武将主战法伤害提高 10.0%"], "戚": ["先知：受策略伤害降低 1.0%", "妙算：主动战法的策略伤害提高 1.0%", "颖悟：造成的策略伤害无视目标 10% 谋略"], "千钧": ["稳固：防御属性提高 1.5", "骁锐：攻击属性提高 1.0%", "亢厉：主动战法的攻击伤害提高 10.0%"], "神锋": ["骁锐：攻击属性提高 2.0", "无畏：追击战法伤害提高 1.0%", "破敌：造成的攻击伤害无视目标 10% 防御"], "螣蛇": ["先知：受策略伤害降低 1.0%", "妙算：主动战法的策略伤害提高 1.0%", "颖悟：造成的策略伤害无视目标 10% 谋略"], "乌号": ["骁锐：攻击属性提高 2.5", "亢厉：主动及追击武将主战法伤害提高 1.0%", "奇袭：与目标距离每 + 1，攻击伤害 + 3.0%"], "星汉": ["稳固：防御属性提高 3.0", "不移：受所有伤害降低 1.0%", "英才：谋略、速度属性提高 5.0%"], "元戎": ["骁锐：攻击属性提高 2.0", "陷阵：前 4 回合普通攻击伤害提高 2.0%", "再战：第 5 回合 50% 几率获得连击"]};
+        const FORGE_TEMPLATES = {"奔袭": "奔袭：追击战法发动率提高 {value}%", "破敌": "破敌：造成的攻击伤害无视目标 {value}% 的防御属性", "强击": "强击：普通攻击伤害提高 {value}%", "骁锐": "骁锐：攻击属性提高 {value}%", "陷阵": "陷阵：普通攻击伤害提高 {value}%", "无畏": "无畏：追击战法伤害提高 {value}%", "至策": "至策：主动战法伤害提高 {value}%", "不屈": "不屈：每次受到伤害后，本回合受到所有伤害降低 {value}%，可叠加", "沉稳": "沉稳：受到的指挥战法伤害降低 {value}%。", "艮止": "艮止：自身无法普通攻击，谋略提高 {value}", "惑言": "惑言：正式回合后，主战法成功施加的前 1-4 个控制效果（混乱、暴走、怯战、犹豫）增加 1 回合", "坚忍": "坚忍：受到的主动战法伤害降低 {value}%", "坚毅": "坚毅：前 {value} 回合免疫混乱及暴走。", "强韧": "强韧：受到的普通攻击伤害降低 {value}%", "稳固": "稳固：防御属性提高 {value}%", "威势": "威势：受到初始统率值低于自身武将的所有伤害降低 {value}%", "筹算": "筹算：造成策略伤害的武将主战法发动率提高 {value}%", "驱火": "驱火：燃烧及火攻伤害提高 {value}%", "济世": "济世：主战法每造成一次恢复效果，效果目标下一次受到伤害减少 {value}%，可叠加", "天资": "天资：谋略属性提高 {value}%", "颖悟": "颖悟：造成的策略伤害无视目标 {value}% 的谋略属性", "炫惑": "炫惑：恐慌及妖术伤害提高 {value}%", "英勇": "英勇：造成攻击伤害的武将主战法发动率提高 {value}%", "机敏": "机敏：武将主战法发动率提高 {value}%", "灵动": "灵动：速度属性提高 {value}", "仁心": "仁心：造成的恢复效果提高 {value}%", "识破": "识破：前 {value} 回合，主动及追击武将主战法造成的伤害无视规避。", "蓄锐": "蓄锐：每 2 次 普通攻击后，自身造成追击战法伤害增加 {value}%，可叠加。", "选锋": "选锋：普通攻击后，自身下一次造成策略伤害提高 {value}%。", "清毅": "清毅：第 {value} 回合武将行动时获得洞察状态", "击虚": "击虚：正式回合后，目标每存在一种持续性伤害 / 控制效果，自身对其造成的伤害提升 {value}%（最多计算 5 种）", "熟虑": "熟虑：需要准备的主动武将主战法发动几率提升 {value}%", "亢厉": "亢厉：主动及追击武将主战法伤害提高 {value}%", "不懈": "不懈：自身兵力低于初始兵力15%，受到的恢复效果提升 {value}%", "善谋": "善谋：造成策略伤害的武将主战法发动率提高 {value}%"};
+        const TODAY_FORGE_EFFECTS = ["不屈", "亢厉", "仁心", "击虚", "善谋", "坚忍", "坚毅", "天资", "奔袭", "威势", "惑言", "无畏", "济世", "灵动", "破敌", "筹算", "至策", "艮止", "英勇", "陷阵", "颖悟", "骁锐"];
+        
+        // 筛选状态
+        let selectedPriceType = 'all';
+        let selectedTreasureTypes = [];
+        let selectedForgeEffects = [];
+        
+        // 分页配置
+        let currentPage = 1;
+        const pageSize = 20;
+        let filteredNormalTreasures = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // 宝物-词条-档位联动
+            const demandTreasure = document.getElementById('demandTreasure');
+            const demandForge = document.getElementById('demandForge');
+            const demandLevel = document.getElementById('demandLevel');
+            
+            demandTreasure.addEventListener('change', function() {
+                const val = this.value;
+                demandForge.innerHTML = '<option value="">-- 请选择词条 --</option>';
+                demandLevel.innerHTML = '<option value="">-- 请先选择词条 --</option>';
+                demandForge.disabled = !val;
+                demandLevel.disabled = true;
+                if (val && TREASURE_FORGE_DATA["宝物对应词条"][val]) {
+                    TREASURE_FORGE_DATA["宝物对应词条"][val].forEach(f => {
+                        const opt = document.createElement('option');
+                        opt.value = f;
+                        opt.textContent = f;
+                        demandForge.appendChild(opt);
+                    });
+                }
+            });
+
+            demandForge.addEventListener('change', function() {
+                const val = this.value;
+                demandLevel.innerHTML = '<option value="">-- 请选择档位 --</option>';
+                demandLevel.disabled = !val;
+                if (val && TREASURE_FORGE_DATA["词条档位"][val]) {
+                    TREASURE_FORGE_DATA["词条档位"][val].forEach(l => {
+                        const opt = document.createElement('option');
+                        opt.value = l;
+                        opt.textContent = l;
+                        demandLevel.appendChild(opt);
+                    });
+                }
+            });
+
+            // 需求提交
+            document.getElementById('demandForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const demand = {
+                    id: Date.now(),
+                    wechat: document.getElementById('demandWechat').value,
+                    treasure: demandTreasure.value,
+                    forge: demandForge.value,
+                    level: demandLevel.value,
+                    status: '待匹配'
+                };
+                let demands = JSON.parse(localStorage.getItem('treasureDemands') || '[]');
+                demands.push(demand);
+                localStorage.setItem('treasureDemands', JSON.stringify(demands));
+                renderDemandList();
+                this.reset();
+                alert('需求提交成功！');
+            });
+
+            // 渲染需求列表
+            function renderDemandList() {
+                const demands = JSON.parse(localStorage.getItem('treasureDemands') || '[]');
+                const list = document.getElementById('demandList');
+                list.innerHTML = '';
+                let matchCount = 0;
+
+                demands.forEach(d => {
+                    const isMatched = CURRENT_TREASURES.some(t => t.name === d.treasure && t.forge === d.forge);
+                    if (isMatched) {
+                        d.status = '已匹配';
+                        matchCount++;
+                    }
+                    const tr = document.createElement('tr');
+                    tr.className = isMatched ? 'bg-red-50 text-red-700' : '';
+                    tr.innerHTML = `
+                        <td class="px-4 py-3 whitespace-nowrap">客户 #${d.id.toString().slice(-4)}</td>
+                        <td class="px-4 py-3 whitespace-nowrap">${d.treasure}</td>
+                        <td class="px-4 py-3 whitespace-nowrap">${d.forge}</td>
+                        <td class="px-4 py-3 whitespace-nowrap">${d.level}</td>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${isMatched ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'}">
+                                ${d.status}
+                            </span>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
+                            <button onclick="deleteDemand(${d.id})" class="text-red-500 hover:text-red-700">删除</button>
+                        </td>
+                    `;
+                    list.appendChild(tr);
+                });
+
+                const alert = document.getElementById('matchAlert');
+                alert.textContent = `📢 有 ${matchCount} 个客户需求匹配到新宝物！`;
+                alert.classList.toggle('hidden', matchCount === 0);
+            }
+
+            // 删除需求
+            window.deleteDemand = function(id) {
+                let demands = JSON.parse(localStorage.getItem('treasureDemands') || '[]');
+                demands = demands.filter(d => d.id !== id);
+                localStorage.setItem('treasureDemands', JSON.stringify(demands));
+                renderDemandList();
+            };
+
+            // 模块切换（适配移动端底部导航）
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = this.getAttribute('data-target');
+                    document.querySelectorAll('.module-content').forEach(m => m.classList.add('module-hidden'));
+                    document.getElementById(target).classList.remove('module-hidden');
+                    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('nav-active'));
+                    this.classList.add('nav-active');
+                });
+            });
+
+            // 分页核心函数
+            function loadPage(page) {
+                document.querySelectorAll('.normal-treasure-card').forEach(card => card.style.display = 'none');
+                if (filteredNormalTreasures.length === 0) {
+                    document.getElementById('paginationControl').classList.add('hidden');
+                    return;
+                }
+                
+                const totalPages = Math.ceil(filteredNormalTreasures.length / pageSize);
+                page = Math.max(1, Math.min(page, totalPages));
+                
+                const start = (page - 1) * pageSize;
+                const end = Math.min(start + pageSize, filteredNormalTreasures.length);
+                filteredNormalTreasures.slice(start, end).forEach(card => card.style.display = '');
+                
+                // 更新分页控件状态
+                document.getElementById('currentPage').textContent = page;
+                document.getElementById('totalPages').textContent = totalPages;
+                document.getElementById('prevPageBtn').disabled = page === 1;
+                document.getElementById('nextPageBtn').disabled = page === totalPages;
+                document.getElementById('paginationControl').classList.toggle('hidden', filteredNormalTreasures.length <= pageSize);
+                
+                currentPage = page;
+            }
+
+            // 筛选宝物
+            function filterTreasureCards() {
+                // 筛选普通宝物（分页用）
+                filteredNormalTreasures = Array.from(document.querySelectorAll('.normal-treasure-card')).filter(card => {
+                    const priceOk = selectedPriceType === 'all' || card.getAttribute('data-price') === selectedPriceType;
+                    const typeOk = selectedTreasureTypes.length === 0 || selectedTreasureTypes.includes(card.getAttribute('data-treasure-type'));
+                    const forgeOk = selectedForgeEffects.length === 0 || selectedForgeEffects.includes(card.getAttribute('data-forge-effect'));
+                    return priceOk && typeOk && forgeOk;
+                });
+
+                // 筛选急出宝物
+                document.querySelectorAll('#urgentTreasures .treasure-card').forEach(card => {
+                    const priceOk = selectedPriceType === 'all' || card.getAttribute('data-price') === selectedPriceType;
+                    const typeOk = selectedTreasureTypes.length === 0 || selectedTreasureTypes.includes(card.getAttribute('data-treasure-type'));
+                    const forgeOk = selectedForgeEffects.length === 0 || selectedForgeEffects.includes(card.getAttribute('data-forge-effect'));
+                    card.style.display = (priceOk && typeOk && forgeOk) ? '' : 'none';
+                });
+
+                // 加载第一页
+                loadPage(1);
+            }
+
+            // 价格筛选
+            document.querySelectorAll('.price-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.price-tab').forEach(t => {
+                        t.classList.remove('bg-neutral', 'text-white');
+                        if (t.getAttribute('data-type') === 'low') t.classList.add('bg-low/10', 'text-low');
+                        else if (t.getAttribute('data-type') === 'high') t.classList.add('bg-high/10', 'text-high');
+                    });
+                    this.classList.add('bg-neutral', 'text-white');
+                    selectedPriceType = this.getAttribute('data-type');
+                    filterTreasureCards();
+                });
+            });
+
+            // 宝物类型筛选
+            document.getElementById('toggleTreasureType').addEventListener('click', function() {
+                const options = document.getElementById('treasureTypeOptions');
+                options.classList.toggle('hidden');
+                this.querySelector('i').classList.toggle('rotate-180');
+            });
+
+            document.querySelectorAll('.treasure-type-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const type = this.getAttribute('data-type');
+                    this.classList.toggle('bg-neutral');
+                    this.classList.toggle('text-white');
+                    selectedTreasureTypes = selectedTreasureTypes.includes(type) 
+                        ? selectedTreasureTypes.filter(item => item !== type) 
+                        : [...selectedTreasureTypes, type];
+                    updateForgeEffectOptions();
+                    filterTreasureCards();
+                });
+            });
+
+            // 锻造效果筛选
+            document.getElementById('toggleForgeEffect').addEventListener('click', function() {
+                const options = document.getElementById('forgeEffectOptions');
+                options.classList.toggle('hidden');
+                this.querySelector('i').classList.toggle('rotate-180');
+            });
+
+            document.querySelectorAll('.forge-effect-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const type = this.getAttribute('data-type');
+                    this.classList.toggle('bg-neutral');
+                    this.classList.toggle('text-white');
+                    selectedForgeEffects = selectedForgeEffects.includes(type) 
+                        ? selectedForgeEffects.filter(item => item !== type) 
+                        : [...selectedForgeEffects, type];
+                    filterTreasureCards();
+                });
+            });
+
+            // 重置筛选
+            document.getElementById('resetFilters').addEventListener('click', function() {
+                document.querySelectorAll('.price-tab').forEach(tab => {
+                    tab.classList.remove('bg-neutral', 'text-white');
+                    if (tab.getAttribute('data-type') === 'low') tab.classList.add('bg-low/10', 'text-low');
+                    else if (tab.getAttribute('data-type') === 'high') tab.classList.add('bg-high/10', 'text-high');
+                });
+                document.querySelector('.price-tab[data-type="all"]').classList.add('bg-neutral', 'text-white');
+                selectedPriceType = 'all';
+                selectedTreasureTypes = [];
+                selectedForgeEffects = [];
+                document.querySelectorAll('.treasure-type-option, .forge-effect-option').forEach(opt => {
+                    opt.classList.remove('bg-neutral', 'text-white');
+                    opt.classList.add('bg-gray-100', 'text-gray-600');
+                });
+                updateForgeEffectOptions(true);
+                document.getElementById('treasureTypeOptions').classList.add('hidden');
+                document.getElementById('forgeEffectOptions').classList.add('hidden');
+                document.getElementById('toggleTreasureType').querySelector('i').classList.remove('rotate-180');
+                document.getElementById('toggleForgeEffect').querySelector('i').classList.remove('rotate-180');
+                filterTreasureCards();
+            });
+
+            // 更新锻造效果选项
+            function updateForgeEffectOptions(reset = false) {
+                const options = document.getElementById('forgeEffectOptions');
+                if (reset) {
+                    options.innerHTML = TODAY_FORGE_EFFECTS.map(e => `
+                    <button class="forge-effect-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="${e}">
+                        ${e}
+                    </button>
+                    `).join('');
+                    return;
+                }
+                let filtered = new Set(TODAY_FORGE_EFFECTS);
+                if (selectedTreasureTypes.length > 0) {
+                    filtered = new Set();
+                    CURRENT_TREASURES.forEach(t => {
+                        if (selectedTreasureTypes.includes(t.name)) filtered.add(t.forge);
+                    });
+                }
+                options.innerHTML = Array.from(filtered).map(e => `
+                <button class="forge-effect-option bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-200 transition-colors" data-type="${e}">
+                    ${e}
+                </button>
+                `).join('');
+                options.querySelectorAll('.forge-effect-option').forEach(opt => {
+                    opt.addEventListener('click', function() {
+                        const type = this.getAttribute('data-type');
+                        this.classList.toggle('bg-neutral');
+                        this.classList.toggle('text-white');
+                        selectedForgeEffects = selectedForgeEffects.includes(type) 
+                            ? selectedForgeEffects.filter(item => item !== type) 
+                            : [...selectedForgeEffects, type];
+                        filterTreasureCards();
+                    });
+                });
+            }
+
+            // 详情展开/收起
+            window.toggleDetails = function(id) {
+                const details = document.getElementById(id);
+                const icon = document.getElementById(`icon-${id}`);
+                if (details.classList.contains('hidden')) {
+                    details.classList.remove('hidden');
+                    icon.classList.replace('fa-chevron-down', 'fa-chevron-up');
+                    icon.nextElementSibling.textContent = ' 收起';
+                } else {
+                    details.classList.add('hidden');
+                    icon.classList.replace('fa-chevron-up', 'fa-chevron-down');
+                    icon.nextElementSibling.textContent = ' 详情';
+                }
+            }
+
+            // 效果展开/收起
+            window.toggleTreasureEffects = function(id) {
+                const effects = document.getElementById(id);
+                const btn = document.getElementById(`btn-effects-${id}`);
+                if (effects.classList.contains('hidden')) {
+                    effects.classList.remove('hidden');
+                    btn.innerHTML = `<i class="fa fa-chevron-up mr-1" id="icon-effects-${id}"></i> 收起效果详情`;
+                } else {
+                    effects.classList.add('hidden');
+                    btn.innerHTML = `<i class="fa fa-chevron-down mr-1" id="icon-effects-${id}"></i> 点击查看效果`;
+                }
+            }
+
+            // 推荐模块逻辑
+            const countrySelect = document.getElementById('countrySelect');
+            const generalSelect = document.getElementById('generalSelect');
+            const generalTypeSelect = document.getElementById('generalTypeSelect');
+            const searchBtn = document.getElementById('searchRecommendBtn');
+            const recommendResult = document.getElementById('recommendResult');
+
+            countrySelect.addEventListener('change', function() {
+                const val = this.value;
+                generalSelect.innerHTML = '<option value="">-- 请选择武将 --</option>';
+                generalTypeSelect.innerHTML = '<option value="">-- 请先选择武将 --</option>';
+                generalSelect.disabled = !val;
+                generalTypeSelect.disabled = true;
+                searchBtn.disabled = true;
+                if (val && GENERAL_TREASURE_RECOMMENDATIONS[val]) {
+                    Object.keys(GENERAL_TREASURE_RECOMMENDATIONS[val]).forEach(g => {
+                        const opt = document.createElement('option');
+                        opt.value = g;
+                        opt.textContent = g;
+                        generalSelect.appendChild(opt);
+                    });
+                }
+            });
+
+            generalSelect.addEventListener('change', function() {
+                const country = countrySelect.value;
+                const val = this.value;
+                generalTypeSelect.innerHTML = '<option value="">-- 无类型（默认） --</option>';
+                generalTypeSelect.disabled = !val;
+                searchBtn.disabled = !val;
+                if (country && val && GENERAL_TREASURE_RECOMMENDATIONS[country][val]) {
+                    const data = GENERAL_TREASURE_RECOMMENDATIONS[country][val];
+                    if (data && typeof data === 'object' && !Array.isArray(data) && !('千元上' in data) && !('千元下' in data)) {
+                        Object.keys(data).forEach(t => {
+                            const opt = document.createElement('option');
+                            opt.value = t;
+                            opt.textContent = t;
+                            generalTypeSelect.appendChild(opt);
+                        });
+                    }
+                }
+            });
+
+            searchBtn.addEventListener('click', function() {
+                const country = countrySelect.value;
+                const general = generalSelect.value;
+                const type = generalTypeSelect.value || '';
+                const priceTypes = ['千元上', '千元下', '垃圾粉'];
+                let recommendations = [];
+
+                if (country && general && GENERAL_TREASURE_RECOMMENDATIONS[country][general]) {
+                    const data = GENERAL_TREASURE_RECOMMENDATIONS[country][general];
+                    priceTypes.forEach(pt => {
+                        if (type && data[type] && data[type][pt]) {
+                            data[type][pt].forEach(t => recommendations.push({name: t, priceType: pt}));
+                        } else if (data[pt]) {
+                            data[pt].forEach(t => recommendations.push({name: t, priceType: pt}));
+                        }
+                    });
+                }
+
+                if (recommendations.length > 0) {
+                    recommendResult.innerHTML = '';
+                    recommendations.forEach((item, idx) => {
+                        let cls = item.priceType === '千元上' ? 'bg-high/10 text-high' : item.priceType === '千元下' ? 'bg-low/10 text-low' : 'bg-gray-100 text-gray-600';
+                        let tName = item.name, fWord = '';
+                        Object.keys(FORGE_TEMPLATES).forEach(f => {
+                            if (tName.endsWith(f)) {
+                                fWord = f;
+                                tName = tName.substring(0, tName.length - f.length).trim();
+                            }
+                        });
+                        const isOnSale = CURRENT_TREASURES.some(t => t.name === tName && t.forge === fWord);
+                        const baseEffects = BASE_EFFECTS[tName] || [`暂无${tName}的基础效果数据`];
+                        const baseHtml = baseEffects.map(e => `<div class="text-xs">${e}</div>`).join('');
+                        const forgeHtml = fWord && FORGE_TEMPLATES[fWord] ? `<div class="text-xs">${FORGE_TEMPLATES[fWord].replace('{value}', 'X')}</div>` : '<div class="text-xs">暂无锻造效果数据</div>';
+
+                        const card = document.createElement('div');
+                        card.className = 'border border-gray-200 rounded-lg p-3';
+                        card.innerHTML = `
+                            <div class="flex justify-between items-start mb-1">
+                                <div class="font-semibold text-sm">${item.name}</div>
+                                <span class="${cls} text-xs px-2 py-0.5 rounded">${item.priceType}</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mb-2">${isOnSale ? '✅ 当前有在售' : '❌ 暂未上架'}</p>
+                            <button id="btn-effects-${idx}" onclick="toggleTreasureEffects('effects-${idx}')" class="text-primary text-xs flex items-center">
+                                <i class="fa fa-chevron-down mr-1" id="icon-effects-${idx}"></i> 点击查看效果
+                            </button>
+                            <div id="effects-${idx}" class="hidden mt-2 pt-2 border-t border-gray-100 text-gray-700">
+                                <div class="mb-1">
+                                    <div class="font-medium text-gray-800 text-xs mb-0.5">基础效果：</div>
+                                    <div class="pl-2">${baseHtml}</div>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-gray-800 text-xs mb-0.5">锻造效果：</div>
+                                    <div class="pl-2">${forgeHtml}</div>
+                                </div>
+                            </div>
+                        `;
+                        recommendResult.appendChild(card);
+                    });
+                } else {
+                    recommendResult.innerHTML = `
+                        <div class="border border-gray-200 rounded-lg p-3 flex justify-between items-center">
+                            <div><h4 class="font-semibold text-sm">暂无推荐</h4><p class="text-xs text-gray-600">未找到符合条件的宝物推荐</p></div>
+                        </div>
+                    `;
+                }
+            });
+
+            // 分页按钮事件
+            document.getElementById('prevPageBtn').addEventListener('click', () => loadPage(currentPage - 1));
+            document.getElementById('nextPageBtn').addEventListener('click', () => loadPage(currentPage + 1));
+
+            // 初始化
+            renderDemandList();
+            document.querySelector('.nav-item[data-target="treasures"]').click();
+            document.querySelector('.price-tab[data-type="all"]').click();
+            updateForgeEffectOptions();
+        });
+    </script>
+    </body>
+</html>
