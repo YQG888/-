@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>率土之滨宝物助手</title>
+    <title>运气怪-游戏助手</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
@@ -40,32 +40,34 @@
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-2">
                 <i class="fa fa-diamond text-primary text-2xl"></i>
-                <h1 class="text-xl font-bold text-neutral">率土之滨宝物助手</h1>
+                <h1 class="text-xl font-bold text-neutral">运气怪-游戏助手</h1>
             </div>
+            <!-- 电脑端导航 -->
             <div class="hidden md:flex space-x-6">
                 <a href="#treasures" class="text-neutral hover:text-primary transition-colors nav-item nav-active" data-target="treasures">宝物清单</a>
-                <a href="#recommendations" class="text-neutral hover:text-primary transition-colors nav-item" data-target="recommendations">宝物推荐</a>
-                <a href="#requirements" class="text-neutral hover:text-primary transition-colors nav-item" data-target="requirements">客户需求</a>
-                <a href="#history" class="text-neutral hover:text-primary transition-colors nav-item" data-target="history">历史记录</a>
+                <a href="#accounts" class="text-neutral hover:text-primary transition-colors nav-item" data-target="accounts">账号清单</a>
+                <a href="#recommendations" class="text-neutral hover:text-primary transition-colors nav-item" data-target="recommendations">宝物配将中心</a>
             </div>
-            <button class="md:hidden text-neutral text-xl mobile-menu-btn">
-                <i class="fa fa-bars"></i>
-            </button>
-        </div>
-        <!-- 移动端菜单 -->
-        <div class="md:hidden hidden bg-white shadow-lg absolute w-full mobile-menu">
-            <div class="container mx-auto px-4 py-2 flex flex-col space-y-3">
-                <a href="#treasures" class="text-neutral hover:text-primary py-2 transition-colors nav-item" data-target="treasures">宝物清单</a>
-                <a href="#recommendations" class="text-neutral hover:text-primary py-2 transition-colors nav-item" data-target="recommendations">宝物推荐</a>
-                <a href="#requirements" class="text-neutral hover:text-primary py-2 transition-colors nav-item" data-target="requirements">客户需求</a>
-                <a href="#history" class="text-neutral hover:text-primary py-2 transition-colors nav-item" data-target="history">历史记录</a>
+            <!-- 移动端直接显示联系和说明书按钮 -->
+            <div class="md:hidden flex items-center space-x-2">
+                <button class="text-neutral hover:text-primary transition-colors flex items-center space-x-1 px-2 py-1 rounded-full hover:bg-green-50" onclick="showModule('contact')">
+                    <i class="fa fa-weixin text-green-500 text-lg"></i>
+                    <span class="text-xs font-medium text-green-500">联系中介</span>
+                </button>
+                <button class="text-neutral hover:text-primary transition-colors flex items-center space-x-1 px-2 py-1 rounded-full hover:bg-blue-50" onclick="showModule('instruction')">
+                    <i class="fa fa-book text-blue-500 text-lg"></i>
+                    <span class="text-xs font-medium text-blue-500">说明书</span>
+                </button>
             </div>
         </div>
     </nav>
 
     <!-- 主内容区（模块由脚本自动生成） -->
-    <main class="container mx-auto px-4 pt-20 pb-16">
-        
+    <main class="container mx-auto px-4 pt-20 pb-32">
+        <div class="flex flex-col">
+            <!-- 主要内容 -->
+            <div class="w-full">
+                
     <!-- 回到顶部按钮 -->
     <button id="backToTop" class="fixed right-4 bottom-16 bg-primary text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center z-40 hidden hover:bg-primary/90 transition-all">
         <i class="fa fa-arrow-up"></i>
@@ -124,18 +126,51 @@
     </div>
     
     <section id="treasures" class="mb-20 module-content">
-        <div class="flex justify-between items-center mb-4">
+        <div class="mb-4">
             <h2 class="text-xl font-bold text-neutral">今日在售清单</h2>
-            <button class="bg-primary text-white px-3 py-1.5 rounded-lg hover:bg-primary/90 transition-colors text-sm">
-                <i class="fa fa-share-alt mr-1"></i> 分享清单
-            </button>
         </div>
         <div class="mb-6">
             <h3 class="text-base font-bold text-neutral mb-3 flex items-center">
                 <i class="fa fa-fire text-urgent mr-2"></i> 急出特价
             </h3>
             <div class="overflow-x-auto pb-2">
-                <div id="urgentTreasures" class="flex space-x-3 flex-wrap"></div>
+                <div id="urgentTreasures" class="flex space-x-3 flex-wrap">
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-3 w-full sm:w-[280px] treasure-card" 
+                 data-price="low" data-name="博浪" data-forge="坚忍"
+                 data-treasure-type="博浪" data-forge-effect="坚忍">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('urgent-11')">
+                    <h3 class="font-bold text-base">博浪坚忍17</h3>
+                    <span class="bg-urgent/10 text-urgent text-xs px-2 py-0.5 rounded">急出</span>
+                </div>
+                <div class="text-urgent font-bold text-lg mb-1">900元</div>
+                <div id="urgent-11" class="hidden">
+                    <div class="mb-2 mt-2"><div class="font-medium text-gray-800 text-xs mb-1">自带效果：</div><div class="effect-item text-xs">妄贞：混乱、暴走、怯战、犹豫状态下受伤降低 1.0%</div><div class="effect-item text-xs">坚忍：受到的主动战法伤害降低 2.0%</div><div class="effect-item text-xs">抖擞：自身受到的恢复效果提高 25.0%</div></div>
+                    <div class="mb-2"><div class="font-medium text-gray-800 text-xs mb-1">锻造效果：</div><div class="text-gray-600 text-xs">坚忍：受到的主动战法伤害降低 17%</div></div>
+                    <div><div class="font-medium text-gray-800 text-xs mb-1">适用武将：</div><div class="effect-item text-xs">周泰, 汉董卓, 郝昭, 严颜, 程普, 刘备, 夏侯霸, 皇甫嵩</div></div>
+                </div>
+                <div class="text-xs text-gray-400 mt-1 cursor-pointer" onclick="toggleDetails('urgent-11')">
+                    <i class="fa fa-chevron-down" id="icon-urgent-11"></i> 详情
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow p-3 card-hover mb-3 w-full sm:w-[280px] treasure-card" 
+                 data-price="low" data-name="铭鸿" data-forge="天资"
+                 data-treasure-type="铭鸿" data-forge-effect="天资">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('urgent-50')">
+                    <h3 class="font-bold text-base">铭鸿天资12</h3>
+                    <span class="bg-urgent/10 text-urgent text-xs px-2 py-0.5 rounded">急出</span>
+                </div>
+                <div class="text-urgent font-bold text-lg mb-1">480元</div>
+                <div id="urgent-50" class="hidden">
+                    <div class="mb-2 mt-2"><div class="font-medium text-gray-800 text-xs mb-1">自带效果：</div><div class="effect-item text-xs">稳固：防御属性提高 3.0</div><div class="effect-item text-xs">英才：攻击、谋略属性提高 1.5%</div><div class="effect-item text-xs">亢厉：主动及追击武将主战法伤害提高 10.0%</div></div>
+                    <div class="mb-2"><div class="font-medium text-gray-800 text-xs mb-1">锻造效果：</div><div class="text-gray-600 text-xs">天资：谋略属性提高 12%</div></div>
+                    <div><div class="font-medium text-gray-800 text-xs mb-1">适用武将：</div><div class="effect-item text-xs">王异, 庞统（辅助/前锋）</div></div>
+                </div>
+                <div class="text-xs text-gray-400 mt-1 cursor-pointer" onclick="toggleDetails('urgent-50')">
+                    <i class="fa fa-chevron-down" id="icon-urgent-50"></i> 详情
+                </div>
+            </div>
+            </div>
             </div>
         </div>
 
@@ -518,24 +553,6 @@
                 </div>
                 <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-10')">
                     <i class="fa fa-chevron-down" id="icon-normal-10"></i> 详情
-                </div>
-            </div>
-            
-            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
-                 data-price="low" data-name="博浪" data-forge="坚忍"
-                 data-treasure-type="博浪" data-forge-effect="坚忍" style="display: none;">
-                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-11')">
-                    <h3 class="font-bold text-base">博浪坚忍17</h3>
-                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
-                </div>
-                <div class="text-primary font-bold text-lg mb-1">950元</div>
-                <div id="normal-11" class="hidden">
-                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">妄贞：混乱、暴走、怯战、犹豫状态下受伤降低 1.0%</div><div class="effect-item text-xs">坚忍：受到的主动战法伤害降低 2.0%</div><div class="effect-item text-xs">抖擞：自身受到的恢复效果提高 25.0%</div></div>
-                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">坚忍：受到的主动战法伤害降低 17%</div></div>
-                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">周泰, 汉董卓, 郝昭, 严颜, 程普, 刘备, 夏侯霸, 皇甫嵩</div></div>
-                </div>
-                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-11')">
-                    <i class="fa fa-chevron-down" id="icon-normal-11"></i> 详情
                 </div>
             </div>
             
@@ -1224,24 +1241,6 @@
             </div>
             
             <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
-                 data-price="low" data-name="铭鸿" data-forge="天资"
-                 data-treasure-type="铭鸿" data-forge-effect="天资" style="display: none;">
-                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-50')">
-                    <h3 class="font-bold text-base">铭鸿天资12</h3>
-                    <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
-                </div>
-                <div class="text-primary font-bold text-lg mb-1">520元</div>
-                <div id="normal-50" class="hidden">
-                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">稳固：防御属性提高 3.0</div><div class="effect-item text-xs">英才：攻击、谋略属性提高 1.5%</div><div class="effect-item text-xs">亢厉：主动及追击武将主战法伤害提高 10.0%</div></div>
-                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">天资：谋略属性提高 12%</div></div>
-                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">王异, 庞统（辅助/前锋）</div></div>
-                </div>
-                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-50')">
-                    <i class="fa fa-chevron-down" id="icon-normal-50"></i> 详情
-                </div>
-            </div>
-            
-            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
                  data-price="low" data-name="铭鸿" data-forge="亢厉"
                  data-treasure-type="铭鸿" data-forge-effect="亢厉" style="display: none;">
                 <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-51')">
@@ -1292,6 +1291,481 @@
 
         
     <script>
+        // 免费配将功能JavaScript逻辑
+        document.addEventListener('DOMContentLoaded', function() {
+            // 示例数据 - 实际使用时可从外部文件加载
+            const TEAMS_DATA = [
+                {
+                    name: "传统嘟嘟队",
+                    generals: ["周瑜", "吕蒙", "陆逊"],
+                    tactics: ["大都督", "反计之策", "神兵天降", "十面埋伏", "大赏三军", "火势风威"]
+                },
+                {
+                    name: "蜀步队",
+                    generals: ["刘备", "关羽", "张飞"],
+                    tactics: ["皇裔流离", "一骑当千", "人中吕布", "桃园结义", "横扫千军", "长坂坡"]
+                },
+                {
+                    name: "魏智队",
+                    generals: ["荀彧", "郭嘉", "曹操"],
+                    tactics: ["驱虎吞狼", "形兵之极", "楚歌四起", "十面埋伏", "不攻", "白楼独舞"]
+                },
+                {
+                    name: "肉步队",
+                    generals: ["刘备", "赵云", "诸葛亮"],
+                    tactics: ["皇裔流离", "一夫当关", "回马", "重整旗鼓", "擅兵不寡", "极火佐攻"]
+                },
+                {
+                    name: "菜刀队",
+                    generals: ["马超", "张辽", "曹操"],
+                    tactics: ["温酒斩将", "攻其不备", "长兵方阵", "全军突击", "虎豹骑", "先驱突击"]
+                },
+                {
+                    name: "爷爷队",
+                    generals: ["陆抗", "刘备", "张昭"],
+                    tactics: ["西陵克晋", "皇裔流离", "重整旗鼓", "草木皆兵", "擅兵不寡", "反间"]
+                },
+                {
+                    name: "法刀队",
+                    generals: ["群雕", "张机", "群贾诩"],
+                    tactics: ["楚歌四起", "形兵之极", "不攻", "十面埋伏", "众谋不懈", "风声鹤唳"]
+                },
+                {
+                    name: "形兵魏智",
+                    generals: ["司马懿", "庞统", "曹操"],
+                    tactics: ["形兵之极", "深谋远虑", "风声鹤唳", "不攻", "十面埋伏", "楚歌四起"]
+                },
+                {
+                    name: "肉步变种",
+                    generals: ["孙权", "张机", "SP刘备"],
+                    tactics: ["九锡黄龙", "重整旗鼓", "步步为营", "单骑救主", "利兵谋胜", "擅兵不寡"]
+                },
+                {
+                    name: "法刀变种",
+                    generals: ["荀彧&荀攸", "曹操", "程昱"],
+                    tactics: ["王佐之才", "形兵之极", "不攻", "十面埋伏", "众谋不懈", "风声鹤唳"]
+                }
+            ];
+
+            // 更多武将数据
+            const MORE_GENERALS = [
+                { name: "郭嘉", country: "魏国" },
+                { name: "荀彧", country: "魏国" },
+                { name: "司马懿", country: "魏国" },
+                { name: "许褚", country: "魏国" },
+                { name: "典韦", country: "魏国" },
+                { name: "夏侯惇", country: "魏国" },
+                { name: "夏侯渊", country: "魏国" },
+                { name: "曹仁", country: "魏国" },
+                { name: "徐晃", country: "魏国" },
+                { name: "于禁", country: "魏国" },
+                { name: "乐进", country: "魏国" },
+                { name: "李典", country: "魏国" },
+                { name: "邓艾", country: "魏国" },
+                { name: "钟会", country: "魏国" },
+                { name: "曹彰", country: "魏国" },
+                { name: "曹纯", country: "魏国" },
+                { name: "曹植", country: "魏国" },
+                { name: "曹彰", country: "魏国" },
+                { name: "张春华", country: "魏国" },
+                { name: "甄洛", country: "魏国" },
+                { name: "姜维", country: "蜀国" },
+                { name: "马超", country: "蜀国" },
+                { name: "黄忠", country: "蜀国" },
+                { name: "赵云", country: "蜀国" },
+                { name: "张飞", country: "蜀国" },
+                { name: "马超", country: "蜀国" },
+                { name: "魏延", country: "蜀国" },
+                { name: "庞统", country: "蜀国" },
+                { name: "法正", country: "蜀国" },
+                { name: "徐庶", country: "蜀国" },
+                { name: "黄月英", country: "蜀国" },
+                { name: "马云禄", country: "蜀国" },
+                { name: "关银屏", country: "蜀国" },
+                { name: "马岱", country: "蜀国" },
+                { name: "关兴&张苞", country: "蜀国" },
+                { name: "马良", country: "蜀国" },
+                { name: "蒋琬", country: "蜀国" },
+                { name: "周泰", country: "吴国" },
+                { name: "甘宁", country: "吴国" },
+                { name: "吕蒙", country: "吴国" },
+                { name: "太史慈", country: "吴国" },
+                { name: "黄盖", country: "吴国" },
+                { name: "程普", country: "吴国" },
+                { name: "韩当", country: "吴国" },
+                { name: "凌统", country: "吴国" },
+                { name: "孙尚香", country: "吴国" },
+                { name: "大乔&小乔", country: "吴国" },
+                { name: "朱儁", country: "汉国" },
+                { name: "皇甫嵩", country: "汉国" },
+                { name: "何太后", country: "汉国" },
+                { name: "灵帝", country: "汉国" },
+                { name: "张机", country: "汉国" },
+                { name: "卢植", country: "汉国" },
+                { name: "董卓", country: "汉国" },
+                { name: "貂蝉", country: "汉国" },
+                { name: "吕布", country: "群雄" },
+                { name: "张角", country: "群雄" },
+                { name: "袁绍", country: "群雄" },
+                { name: "颜良&文丑", country: "群雄" },
+                { name: "祝融夫人", country: "群雄" },
+                { name: "孟获", country: "群雄" },
+                { name: "华雄", country: "群雄" },
+                { name: "高顺", country: "群雄" },
+                { name: "吕玲绮", country: "群雄" },
+                { name: "sp袁绍", country: "群雄" },
+                { name: "sp朱儁", country: "群雄" },
+                { name: "群雕", country: "群雄" },
+                { name: "群贾诩", country: "群雄" },
+                { name: "sp貂蝉", country: "群雄" },
+                { name: "陆抗", country: "晋国" },
+                { name: "羊祜", country: "晋国" },
+                { name: "杜预", country: "晋国" },
+                { name: "张华", country: "晋国" },
+                { name: "荀勖", country: "晋国" }
+            ];
+
+            // 更多战法数据
+            const MORE_TACTICS = [
+                "形兵之极", "不攻", "十面埋伏", "楚歌四起", "众谋不懈", "风声鹤唳", "草木皆兵", 
+                "深谋远虑", "利兵谋胜", "道行险阻", "兼弱攻昧", "落雷", "大火", "大水", 
+                "反计之策", "浑水摸鱼", "妖术", "安抚军心", "战必断金", "磐阵善守", 
+                "步步为营", "反间", "避其锋芒", "无心恋战", "绝水遏敌", "始计", "白楼独舞", 
+                "一骑当千", "人中吕布", "温酒斩将", "攻其不备", "全军突击", "长兵方阵", 
+                "先驱突击", "愈战愈勇", "胜兵求战", "疾击其后", "温酒斩将", "回马", 
+                "一夫当关", "空城", "擅兵不寡", "重整旗鼓", "步步为营", "擅兵不寡", 
+                "大赏三军", "神兵天降", "鸟云泽兵", "极火佐攻", "伐谋", "合流", "火势风威", 
+                "桃园结义", "横扫千军", "长坂坡", "虎豹骑", "大都督", "西陵克晋", "王佐之才", 
+                "九锡黄龙", "单骑救主", "皇裔流离", "驱虎吞狼", "楚歌四起", "形兵之极"
+            ];
+
+            // 状态变量
+            const selectedGenerals = new Set();
+            const selectedTactics = new Set();
+
+            // 初始化页面
+            initializePage();
+
+            function initializePage() {
+                // 加载更多武将
+                loadMoreGenerals();
+                // 加载更多战法
+                loadMoreTactics();
+                // 绑定事件监听器
+                bindEventListeners();
+            }
+
+            function loadMoreGenerals() {
+                const generalsArea = document.getElementById('generalsSelectionArea');
+                MORE_GENERALS.forEach(general => {
+                    const btn = document.createElement('button');
+                    btn.className = 'general-btn bg-gray-50 border border-gray-200 rounded-md py-1.5 px-2 text-xs text-center hover:bg-gray-100 transition-colors';
+                    btn.dataset.country = general.country;
+                    btn.dataset.name = general.name;
+                    btn.textContent = general.name;
+                    generalsArea.appendChild(btn);
+                });
+            }
+
+            function loadMoreTactics() {
+                const tacticsArea = document.getElementById('tacticsSelectionArea');
+                MORE_TACTICS.forEach(tactic => {
+                    const btn = document.createElement('button');
+                    btn.className = 'tactic-btn bg-gray-50 border border-gray-200 rounded-md py-1 px-2 text-xs hover:bg-gray-100 transition-colors';
+                    btn.dataset.name = tactic;
+                    btn.textContent = tactic;
+                    tacticsArea.appendChild(btn);
+                });
+            }
+
+            function bindEventListeners() {
+                // 国家标签切换
+                document.querySelectorAll('.country-tab').forEach(tab => {
+                    tab.addEventListener('click', handleCountryTabClick);
+                });
+
+                // 武将选择
+                document.querySelectorAll('.general-btn').forEach(btn => {
+                    btn.addEventListener('click', handleGeneralClick);
+                });
+
+                // 战法选择
+                document.querySelectorAll('.tactic-btn').forEach(btn => {
+                    btn.addEventListener('click', handleTacticClick);
+                });
+
+                // 战法搜索
+                document.getElementById('tacticSearchInput').addEventListener('input', handleTacticSearch);
+
+                // 查找队伍按钮
+                document.getElementById('findTeamsBtn').addEventListener('click', findRecommendedTeams);
+
+                // 清空选择按钮
+                document.getElementById('clearSelectionsBtn').addEventListener('click', clearAllSelections);
+            }
+
+            function handleCountryTabClick(event) {
+                // 更新标签样式
+                document.querySelectorAll('.country-tab').forEach(tab => {
+                    tab.classList.remove('bg-primary', 'text-white');
+                    tab.classList.add('bg-gray-100', 'text-gray-600');
+                });
+                event.currentTarget.classList.remove('bg-gray-100', 'text-gray-600');
+                event.currentTarget.classList.add('bg-primary', 'text-white');
+
+                // 筛选武将
+                const country = event.currentTarget.dataset.country;
+                document.querySelectorAll('.general-btn').forEach(btn => {
+                    if (country === 'all' || btn.dataset.country === country) {
+                        btn.style.display = 'block';
+                    } else {
+                        btn.style.display = 'none';
+                    }
+                });
+            }
+
+            function handleGeneralClick(event) {
+                const generalName = event.currentTarget.dataset.name;
+                const btn = event.currentTarget;
+
+                if (selectedGenerals.has(generalName)) {
+                    // 取消选择
+                    selectedGenerals.delete(generalName);
+                    btn.classList.remove('bg-primary', 'text-white', 'border-primary');
+                    btn.classList.add('bg-gray-50', 'text-gray-800', 'border-gray-200');
+                } else {
+                    // 选择
+                    selectedGenerals.add(generalName);
+                    btn.classList.remove('bg-gray-50', 'text-gray-800', 'border-gray-200');
+                    btn.classList.add('bg-primary', 'text-white', 'border-primary');
+                }
+
+                updateSelectedGeneralsDisplay();
+            }
+
+            function handleTacticClick(event) {
+                const tacticName = event.currentTarget.dataset.name;
+                const btn = event.currentTarget;
+
+                if (selectedTactics.has(tacticName)) {
+                    // 取消选择
+                    selectedTactics.delete(tacticName);
+                    btn.classList.remove('bg-primary', 'text-white', 'border-primary');
+                    btn.classList.add('bg-gray-50', 'text-gray-800', 'border-gray-200');
+                } else {
+                    // 选择
+                    selectedTactics.add(tacticName);
+                    btn.classList.remove('bg-gray-50', 'text-gray-800', 'border-gray-200');
+                    btn.classList.add('bg-primary', 'text-white', 'border-primary');
+                }
+
+                updateSelectedTacticsDisplay();
+            }
+
+            function handleTacticSearch(event) {
+                const searchTerm = event.target.value.toLowerCase();
+                document.querySelectorAll('.tactic-btn').forEach(btn => {
+                    const tacticName = btn.dataset.name.toLowerCase();
+                    if (tacticName.includes(searchTerm)) {
+                        btn.style.display = 'inline-block';
+                    } else {
+                        btn.style.display = 'none';
+                    }
+                });
+            }
+
+            function updateSelectedGeneralsDisplay() {
+                const container = document.getElementById('selectedGeneralsList');
+                container.innerHTML = '';
+
+                selectedGenerals.forEach(name => {
+                    const tag = document.createElement('span');
+                    tag.className = 'inline-block bg-primary/10 text-primary px-2 py-0.5 rounded-full text-xs';
+                    tag.innerHTML = `${name} <button type="button" class="ml-1 text-primary/70 hover:text-primary" data-remove="general" data-name="${name}">×</button>`;
+                    container.appendChild(tag);
+                });
+
+                // 绑定移除事件
+                container.querySelectorAll('[data-remove="general"]').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const name = this.dataset.name;
+                        selectedGenerals.delete(name);
+                        // 更新对应按钮状态
+                        document.querySelector(`.general-btn[data-name="${name}"]`).classList.remove('bg-primary', 'text-white', 'border-primary');
+                        document.querySelector(`.general-btn[data-name="${name}"]`).classList.add('bg-gray-50', 'text-gray-800', 'border-gray-200');
+                        updateSelectedGeneralsDisplay();
+                    });
+                });
+            }
+
+            function updateSelectedTacticsDisplay() {
+                const container = document.getElementById('selectedTacticsList');
+                container.innerHTML = '';
+
+                selectedTactics.forEach(name => {
+                    const tag = document.createElement('span');
+                    tag.className = 'inline-block bg-primary/10 text-primary px-2 py-0.5 rounded-full text-xs';
+                    tag.innerHTML = `${name} <button type="button" class="ml-1 text-primary/70 hover:text-primary" data-remove="tactic" data-name="${name}">×</button>`;
+                    container.appendChild(tag);
+                });
+
+                // 绑定移除事件
+                container.querySelectorAll('[data-remove="tactic"]').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const name = this.dataset.name;
+                        selectedTactics.delete(name);
+                        // 更新对应按钮状态
+                        document.querySelector(`.tactic-btn[data-name="${name}"]`).classList.remove('bg-primary', 'text-white', 'border-primary');
+                        document.querySelector(`.tactic-btn[data-name="${name}"]`).classList.add('bg-gray-50', 'text-gray-800', 'border-gray-200');
+                        updateSelectedTacticsDisplay();
+                    });
+                });
+            }
+
+            function findRecommendedTeams() {
+                if (selectedGenerals.size === 0) {
+                    alert('请至少选择一名武将');
+                    return;
+                }
+
+                // 计算匹配度
+                const teamsWithScores = TEAMS_DATA.map(team => {
+                    let score = 0;
+                    const matchedGenerals = [];
+                    const missingGenerals = [];
+                    const matchedTactics = [];
+                    const missingTactics = [];
+
+                    // 计算武将匹配
+                    team.generals.forEach(general => {
+                        if (selectedGenerals.has(general)) {
+                            score += 5;
+                            matchedGenerals.push(general);
+                        } else {
+                            missingGenerals.push(general);
+                        }
+                    });
+
+                    // 计算战法匹配
+                    team.tactics.forEach(tactic => {
+                        if (selectedTactics.has(tactic)) {
+                            score += 1;
+                            matchedTactics.push(tactic);
+                        } else {
+                            missingTactics.push(tactic);
+                        }
+                    });
+
+                    return {
+                        ...team,
+                        score,
+                        matchedGenerals,
+                        missingGenerals,
+                        matchedTactics,
+                        missingTactics
+                    };
+                });
+
+                // 按匹配度排序并取前5名
+                teamsWithScores.sort((a, b) => b.score - a.score);
+                const topTeams = teamsWithScores.slice(0, 5);
+
+                // 显示推荐结果
+                displayRecommendedTeams(topTeams);
+            }
+
+            function displayRecommendedTeams(teams) {
+                const container = document.getElementById('recommendedTeams');
+                container.innerHTML = '';
+
+                if (teams.length === 0) {
+                    const emptyState = document.createElement('div');
+                    emptyState.className = 'border border-gray-200 rounded-lg p-3 bg-gray-50 text-center';
+                    emptyState.textContent = '暂无推荐队伍';
+                    container.appendChild(emptyState);
+                    return;
+                }
+
+                teams.forEach((team, index) => {
+                    const teamCard = document.createElement('div');
+                    teamCard.className = 'border border-gray-200 rounded-lg p-3 bg-white';
+                    teamCard.innerHTML = `
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="font-bold text-sm">${index + 1}. ${team.name}</h4>
+                            <span class="text-xs px-2 py-0.5 bg-green-100 text-green-700 rounded-full">匹配度: ${team.score}分</span>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                            <!-- 武将信息 -->
+                            <div>
+                                <p class="text-xs text-gray-500 mb-1">武将</p>
+                                <div class="space-y-1">
+                                    ${team.matchedGenerals.map(gen => `
+                                        <span class="inline-block bg-green-100 text-green-800 px-1.5 py-0.5 rounded text-xs">${gen}</span>
+                                    `).join(' ')}
+                                    ${team.missingGenerals.map(gen => `
+                                        <span class="inline-block bg-red-50 text-red-700 px-1.5 py-0.5 rounded text-xs border border-red-200">${gen}</span>
+                                    `).join(' ')}
+                                </div>
+                            </div>
+                            
+                            <!-- 战法信息 -->
+                            <div>
+                                <p class="text-xs text-gray-500 mb-1">战法</p>
+                                <div class="space-y-1">
+                                    ${team.matchedTactics.map(tac => `
+                                        <span class="inline-block bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded text-xs">${tac}</span>
+                                    `).join(' ')}
+                                    ${team.missingTactics.slice(0, 3).map(tac => `
+                                        <span class="inline-block bg-orange-50 text-orange-700 px-1.5 py-0.5 rounded text-xs border border-orange-200">${tac}</span>
+                                    `).join(' ')}
+                                    ${team.missingTactics.length > 3 ? `
+                                        <span class="inline-block text-gray-400 text-xs">等${team.missingTactics.length - 3}个战法</span>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(teamCard);
+                });
+            }
+
+            function clearAllSelections() {
+                // 清空选择集合
+                selectedGenerals.clear();
+                selectedTactics.clear();
+
+                // 重置按钮样式
+                document.querySelectorAll('.general-btn').forEach(btn => {
+                    btn.classList.remove('bg-primary', 'text-white', 'border-primary');
+                    btn.classList.add('bg-gray-50', 'text-gray-800', 'border-gray-200');
+                });
+
+                document.querySelectorAll('.tactic-btn').forEach(btn => {
+                    btn.classList.remove('bg-primary', 'text-white', 'border-primary');
+                    btn.classList.add('bg-gray-50', 'text-gray-800', 'border-gray-200');
+                });
+
+                // 清空显示区域
+                updateSelectedGeneralsDisplay();
+                updateSelectedTacticsDisplay();
+
+                // 清空搜索框
+                document.getElementById('tacticSearchInput').value = '';
+                document.querySelectorAll('.tactic-btn').forEach(btn => {
+                    btn.style.display = 'inline-block';
+                });
+
+                // 重置推荐区域
+                const container = document.getElementById('recommendedTeams');
+                container.innerHTML = `
+                    <div class="border border-gray-200 rounded-lg p-3 bg-gray-50 text-center">
+                        <p class="text-sm text-gray-600">请选择武将并点击"查找最佳队伍"按钮</p>
+                    </div>
+                `;
+            }
+        });
+
         // 微信模态框控制函数
         function openWechatModal() {
             document.getElementById('wechatModal').classList.remove('hidden');
@@ -1332,38 +1806,10 @@
         });
         
         // 回到顶部功能
-        const backToTopBtn = document.getElementById('backToTop');
-        window.addEventListener('scroll', () => {
-            backToTopBtn.classList.toggle('hidden', window.scrollY <= 300);
-        });
-        backToTopBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+        // 确保backToTopBtn只在一处声明（在template.html中）
     </script>
     
     </section>
-
-    <!-- 移动端底部导航 -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg z-40 md:hidden">
-        <div class="flex justify-around items-center h-16">
-            <a href="#treasures" class="nav-item nav-active flex flex-col items-center justify-center text-sm" data-target="treasures">
-                <i class="fa fa-list-ul text-lg mb-1"></i>
-                <span>宝物清单</span>
-            </a>
-            <a href="#recommendations" class="nav-item flex flex-col items-center justify-center text-sm" data-target="recommendations">
-                <i class="fa fa-thumbs-up text-lg mb-1"></i>
-                <span>宝物推荐</span>
-            </a>
-            <a href="#requirements" class="nav-item flex flex-col items-center justify-center text-sm" data-target="requirements">
-                <i class="fa fa-shopping-cart text-lg mb-1"></i>
-                <span>需求管理</span>
-            </a>
-            <a href="#" class="nav-item flex flex-col items-center justify-center text-sm" onclick="openWechatModal()">
-                <i class="fa fa-weixin text-lg mb-1"></i>
-                <span>微信联系</span>
-            </a>
-        </div>
-    </nav>
     
     <section id="recommendations" class="mb-20 module-content module-hidden">
         <h2 class="text-xl font-bold text-neutral mb-4">宝物推荐匹配</h2>
@@ -1399,6 +1845,121 @@
                 <div id="recommendResult" class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div class="border border-gray-200 rounded-lg p-3 flex justify-between items-center">
                         <div><h4 class="font-semibold text-sm">暂无推荐</h4><p class="text-xs text-gray-600">请选择国家、武将并查找</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 外接率土全武将战法资料功能 -->
+        <div class="bg-white rounded-xl shadow p-4 mb-4">
+            <h3 class="font-bold text-base mb-3">率土全武将战法资料</h3>
+            <div class="p-4 border border-blue-100 bg-blue-50 rounded-lg flex flex-col items-center justify-center text-center">
+                <p class="text-gray-700 mb-4">点击下方按钮访问完整的武将和战法资料库</p>
+                <a href="https://stzb.cbg.163.com/cgi/mweb/query/role?view_loc=link_h5" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors inline-flex items-center">
+                    <i class="fa fa-external-link mr-2"></i> 访问资料库
+                </a>
+                <p class="text-xs text-gray-500 mt-3">包含所有武将、战法详细数据及搭配推荐</p>
+            </div>
+        </div>
+        
+        <!-- 免费配将功能模块 -->
+        <div class="bg-white rounded-xl shadow p-4 mb-4">
+            <h3 class="font-bold text-base mb-3">免费配将推荐</h3>
+            
+            <div class="flex flex-col lg:flex-row gap-4 mb-4">
+                <!-- 武将选择区域 -->
+                <div class="lg:w-1/2">
+                    <label class="block text-gray-700 mb-1 text-sm">已拥有的武将</label>
+                    <div class="border border-gray-200 rounded-lg p-3 max-h-96 overflow-y-auto">
+                        <!-- 国家标签切换 -->
+                        <div class="flex flex-wrap gap-2 mb-3">
+                            <button class="country-tab bg-primary text-white px-3 py-1 rounded-full text-xs" data-country="all">全部</button>
+                            <button class="country-tab bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs hover:bg-gray-200 transition-colors" data-country="魏国">魏国</button>
+                            <button class="country-tab bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs hover:bg-gray-200 transition-colors" data-country="蜀国">蜀国</button>
+                            <button class="country-tab bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs hover:bg-gray-200 transition-colors" data-country="吴国">吴国</button>
+                            <button class="country-tab bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs hover:bg-gray-200 transition-colors" data-country="汉国">汉国</button>
+                            <button class="country-tab bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs hover:bg-gray-200 transition-colors" data-country="群雄">群雄</button>
+                            <button class="country-tab bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs hover:bg-gray-200 transition-colors" data-country="晋国">晋国</button>
+                        </div>
+                        
+                        <!-- 武将选择列表 -->
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2" id="generalsSelectionArea">
+                            <!-- 武将按钮示例 -->
+                            <button class="general-btn bg-gray-50 border border-gray-200 rounded-md py-1.5 px-2 text-xs text-center hover:bg-gray-100 transition-colors" data-country="魏国" data-name="曹操">曹操</button>
+                            <button class="general-btn bg-gray-50 border border-gray-200 rounded-md py-1.5 px-2 text-xs text-center hover:bg-gray-100 transition-colors" data-country="魏国" data-name="张辽">张辽</button>
+                            <button class="general-btn bg-gray-50 border border-gray-200 rounded-md py-1.5 px-2 text-xs text-center hover:bg-gray-100 transition-colors" data-country="魏国" data-name="王异">王异</button>
+                            <button class="general-btn bg-gray-50 border border-gray-200 rounded-md py-1.5 px-2 text-xs text-center hover:bg-gray-100 transition-colors" data-country="蜀国" data-name="刘备">刘备</button>
+                            <button class="general-btn bg-gray-50 border border-gray-200 rounded-md py-1.5 px-2 text-xs text-center hover:bg-gray-100 transition-colors" data-country="蜀国" data-name="诸葛亮">诸葛亮</button>
+                            <button class="general-btn bg-gray-50 border border-gray-200 rounded-md py-1.5 px-2 text-xs text-center hover:bg-gray-100 transition-colors" data-country="蜀国" data-name="关羽">关羽</button>
+                            <button class="general-btn bg-gray-50 border border-gray-200 rounded-md py-1.5 px-2 text-xs text-center hover:bg-gray-100 transition-colors" data-country="吴国" data-name="孙权">孙权</button>
+                            <button class="general-btn bg-gray-50 border border-gray-200 rounded-md py-1.5 px-2 text-xs text-center hover:bg-gray-100 transition-colors" data-country="吴国" data-name="周瑜">周瑜</button>
+                            <button class="general-btn bg-gray-50 border border-gray-200 rounded-md py-1.5 px-2 text-xs text-center hover:bg-gray-100 transition-colors" data-country="吴国" data-name="陆逊">陆逊</button>
+                            <!-- 更多武将将通过JavaScript动态加载 -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 战法选择区域 -->
+                <div class="lg:w-1/2">
+                    <label class="block text-gray-700 mb-1 text-sm">已拥有的战法</label>
+                    <div class="border border-gray-200 rounded-lg p-3">
+                        <div class="flex items-center mb-2">
+                            <input type="text" id="tacticSearchInput" class="w-full p-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary" placeholder="搜索战法名称...">
+                        </div>
+                        <div class="max-h-64 overflow-y-auto">
+                            <div class="flex flex-wrap gap-2" id="tacticsSelectionArea">
+                                <!-- 战法按钮示例 -->
+                                <button class="tactic-btn bg-gray-50 border border-gray-200 rounded-md py-1 px-2 text-xs hover:bg-gray-100 transition-colors" data-name="一骑当千">一骑当千</button>
+                                <button class="tactic-btn bg-gray-50 border border-gray-200 rounded-md py-1 px-2 text-xs hover:bg-gray-100 transition-colors" data-name="人中吕布">人中吕布</button>
+                                <button class="tactic-btn bg-gray-50 border border-gray-200 rounded-md py-1 px-2 text-xs hover:bg-gray-100 transition-colors" data-name="不攻">不攻</button>
+                                <button class="tactic-btn bg-gray-50 border border-gray-200 rounded-md py-1 px-2 text-xs hover:bg-gray-100 transition-colors" data-name="十面埋伏">十面埋伏</button>
+                                <button class="tactic-btn bg-gray-50 border border-gray-200 rounded-md py-1 px-2 text-xs hover:bg-gray-100 transition-colors" data-name="大赏三军">大赏三军</button>
+                                <button class="tactic-btn bg-gray-50 border border-gray-200 rounded-md py-1 px-2 text-xs hover:bg-gray-100 transition-colors" data-name="神兵天降">神兵天降</button>
+                                <button class="tactic-btn bg-gray-50 border border-gray-200 rounded-md py-1 px-2 text-xs hover:bg-gray-100 transition-colors" data-name="浑水摸鱼">浑水摸鱼</button>
+                                <button class="tactic-btn bg-gray-50 border border-gray-200 rounded-md py-1 px-2 text-xs hover:bg-gray-100 transition-colors" data-name="反计之策">反计之策</button>
+                                <!-- 更多战法将通过JavaScript动态加载 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 操作按钮 -->
+            <div class="flex gap-3 mb-4">
+                <button id="findTeamsBtn" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors flex-1">
+                    <i class="fa fa-magic mr-1"></i> 查找最佳队伍
+                </button>
+                <button id="clearSelectionsBtn" class="bg-gray-100 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors">
+                    <i class="fa fa-refresh mr-1"></i> 清空选择
+                </button>
+            </div>
+            
+            <!-- 已选内容显示 -->
+            <div class="mb-4">
+                <h4 class="font-medium text-sm text-gray-700 mb-2">已选择的武将和战法</h4>
+                <div class="flex flex-wrap gap-2">
+                    <div id="selectedGenerals" class="flex-1">
+                        <span class="text-xs text-gray-500">武将: </span>
+                        <div class="inline-flex flex-wrap gap-1 mt-1" id="selectedGeneralsList">
+                            <!-- 已选武将标签会动态添加 -->
+                        </div>
+                    </div>
+                    <div id="selectedTactics" class="flex-1 mt-2 sm:mt-0">
+                        <span class="text-xs text-gray-500">战法: </span>
+                        <div class="inline-flex flex-wrap gap-1 mt-1" id="selectedTacticsList">
+                            <!-- 已选战法标签会动态添加 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 推荐队伍结果 -->
+            <div class="border-t pt-4">
+                <h3 class="font-bold text-base mb-3">推荐队伍</h3>
+                <div id="recommendedTeams" class="space-y-4">
+                    <!-- 推荐队伍卡片 -->
+                    <div class="border border-gray-200 rounded-lg p-3 bg-gray-50 text-center">
+                        <p class="text-sm text-gray-600">请选择武将并点击"查找最佳队伍"按钮</p>
                     </div>
                 </div>
             </div>
@@ -1445,75 +2006,133 @@
         });
         
         // 回到顶部功能
-        const backToTopBtn = document.getElementById('backToTop');
-        window.addEventListener('scroll', () => {
-            backToTopBtn.classList.toggle('hidden', window.scrollY <= 300);
-        });
-        backToTopBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+        // 确保backToTopBtn只在一处声明（在template.html中）
     </script>
     
     </section>
     
-    <section id="requirements" class="mb-20 module-content module-hidden">
-        <div id="matchAlert" class="hidden bg-red-100 text-red-700 p-2 rounded-lg mb-4 text-center font-medium text-sm">
-            <i class="fa fa-bell mr-1"></i> 有 0 个客户需求匹配到新宝物！
+    <section id="accounts" class="mb-20 module-content module-hidden">
+        <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
+            <h2 class="text-xl font-bold text-neutral">账号清单</h2>
         </div>
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-bold text-neutral">客户需求管理</h2>
-            <button class="bg-secondary text-white px-3 py-1.5 rounded-lg hover:bg-secondary/90 transition-colors text-sm">
-                <i class="fa fa-plus mr-1"></i> 添加需求
-            </button>
+        
+        <!-- 筛选和搜索区域 - 移动端优化设计 -->
+        <div class="bg-white rounded-xl shadow p-3 mb-4">
+            <!-- 价格区间筛选 - 移动端优化布局 -->
+            <div class="mb-3">
+                <label class="block text-sm font-medium text-gray-700 mb-2">价格区间：</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <button class="price-range-btn bg-neutral text-white py-2 rounded-lg text-sm" data-min="0" data-max="1999">0~1999</button>
+                    <button class="price-range-btn bg-gray-100 text-gray-600 py-2 rounded-lg text-sm" data-min="2000" data-max="9999">2000~9999</button>
+                    <button class="price-range-btn bg-gray-100 text-gray-600 py-2 rounded-lg text-sm" data-min="10000" data-max="20000">1W~2W</button>
+                    <button class="price-range-btn bg-gray-100 text-gray-600 py-2 rounded-lg text-sm" data-min="20001" data-max="9999999">2W以上</button>
+                </div>
+            </div>
+            
+            <!-- 自定义价格区间 -->
+            <div class="mb-3">
+                <label class="block text-sm font-medium text-gray-700 mb-2">自定义区间：</label>
+                <div class="flex flex-col space-y-2">
+                    <div class="flex items-center space-x-2">
+                        <input type="number" id="minPriceInput" placeholder="最小价格" class="w-full p-2 border border-gray-300 rounded-lg text-sm">
+                        <span class="text-gray-500">-</span>
+                        <input type="number" id="maxPriceInput" placeholder="最大价格" class="w-full p-2 border border-gray-300 rounded-lg text-sm">
+                    </div>
+                    <button id="customPriceApply" class="bg-primary text-white py-2 rounded-lg text-sm w-full">应用</button>
+                </div>
+            </div>
+            
+            <!-- 搜索功能 -->
+            <div class="relative mb-3">
+                <input type="text" id="accountSearch" placeholder="搜索队伍名称或武将名称" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm">
+                <i class="fa fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            </div>
+            
+            <!-- 排序功能 -->
+            <div class="grid grid-cols-3 gap-2">
+                <button id="sortPriceAsc" class="text-sm text-gray-600 flex items-center justify-center py-1.5 hover:text-primary transition-colors border border-gray-200 rounded">
+                    <i class="fa fa-sort-amount-asc mr-1"></i> 升序
+                </button>
+                <button id="sortPriceDesc" class="text-sm text-gray-600 flex items-center justify-center py-1.5 hover:text-primary transition-colors border border-gray-200 rounded">
+                    <i class="fa fa-sort-amount-desc mr-1"></i> 降序
+                </button>
+                <button id="resetAccountFilters" class="text-sm text-gray-600 flex items-center justify-center py-1.5 hover:text-primary transition-colors border border-gray-200 rounded">
+                    <i class="fa fa-refresh mr-1"></i> 重置
+                </button>
+            </div>
         </div>
-        <div class="bg-white rounded-xl shadow p-4 mb-6">
-            <h3 class="font-bold text-base mb-3">提交宝物需求</h3>
-            <form id="demandForm" class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div>
-                    <label class="block text-gray-700 mb-1 text-sm">需要宝物 <span class="text-red-500">*</span></label>
-                    <select id="demandTreasure" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm" required>
-                        <option value="">-- 请选择宝物 --</option>
-                        <option value="屈卢">屈卢</option><option value="狰角枪">狰角枪</option><option value="真刚">真刚</option><option value="彤素">彤素</option><option value="博浪">博浪</option><option value="游飘">游飘</option><option value="承影">承影</option><option value="涂氏匕首">涂氏匕首</option><option value="掩日">掩日</option><option value="少府">少府</option><option value="大将">大将</option><option value="仁风">仁风</option><option value="龙鳞">龙鳞</option><option value="貔貅">貔貅</option><option value="比翼">比翼</option><option value="障日">障日</option><option value="旌阳万仞">旌阳万仞</option><option value="悬翦">悬翦</option><option value="泰阿">泰阿</option><option value="别铭">别铭</option><option value="铭鸿">铭鸿</option><option value="沧海">沧海</option><option value="大橹">大橹</option><option value="惊鲵">惊鲵</option><option value="钜黍">钜黍</option><option value="锟铻">锟铻</option><option value="冥山勾月">冥山勾月</option><option value="戚">戚</option><option value="千钧">千钧</option><option value="神锋">神锋</option><option value="螣蛇">螣蛇</option><option value="乌号">乌号</option><option value="星汉">星汉</option><option value="元戎">元戎</option>
-                    </select>
+        
+        <!-- 账号列表容器 -->
+        <div id="accountListContainer">
+            
+        <div class="bg-white rounded-xl shadow p-4 card-hover mb-4 account-card" 
+             data-price="6000" 
+             data-description="9红核弹弓, 5红爷爷队, 1红杜预菜刀, 7红无吕蒙核弹, 1红卫瓘肉步；3红吕布, 4红吕蒙, 5红张机；" 
+             data-id="LE001">
+            <div class="flex justify-between items-start mb-3">
+                <h4 class="font-medium text-gray-700">账号介绍</h4>
+                <span class="text-sm font-semibold text-gray-600 bg-gray-100 px-2 py-0.5 rounded">LE001</span>
+            </div>
+            <div class="mb-4">
+                <p class="text-sm leading-relaxed text-gray-700 whitespace-pre-line">9红核弹弓, 5红爷爷队, 1红杜预菜刀, 7红无吕蒙核弹, 1红卫瓘肉步；3红吕布, 4红吕蒙, 5红张机；</p>
+            </div>
+            <div class="flex justify-between items-end">
+                <div class="flex flex-col items-start">
+                    <div class="font-bold text-lg text-primary">售价：¥6,000</div>
+                    <div class="text-xs text-gray-400 line-through mt-1">藏宝阁价格：¥8,870</div>
                 </div>
-                <div>
-                    <label class="block text-gray-700 mb-1 text-sm">需要词条 <span class="text-red-500">*</span></label>
-                    <select id="demandForge" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm" required disabled>
-                        <option value="">-- 请先选择宝物 --</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-gray-700 mb-1 text-sm">词条档位 <span class="text-red-500">*</span></label>
-                    <select id="demandLevel" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm" required disabled>
-                        <option value="">-- 请先选择词条 --</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-gray-700 mb-1 text-sm">微信号 <span class="text-red-500">*</span></label>
-                    <input type="text" id="demandWechat" placeholder="请输入微信号" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-sm" required>
-                </div>
-                <div class="md:col-span-2">
-                    <button type="submit" class="bg-secondary text-white px-4 py-2 rounded-lg hover:bg-secondary/90 transition-colors text-sm">
-                        <i class="fa fa-paper-plane mr-1"></i> 提交需求
-                    </button>
-                </div>
-            </form>
+                <a href="https://stzb.cbg.163.com/cgi/mweb/equip/1/202505261002116-1-JNRRZPR37KVSX2?view_loc=link_h5&reco_request_id=1754170180305XLHfA&tag=general_rec_din_tfs&tfid=f_reco_home&tcid=c_reco_home&exposed_scene_id=1754170178959-24020808&refer_sn=01986CB0-DF8F-FDD8-82E2-8DF1F671D89A" target="_blank" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-all duration-300 text-sm font-medium shadow-sm hover:shadow flex items-center">
+                    <i class="fa fa-external-link mr-1.5"></i> 跳转藏宝阁
+                </a>
+            </div>
         </div>
-        <div class="bg-white rounded-xl shadow overflow-hidden">
-            <table class="min-w-full divide-y divide-gray-200 text-sm">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">客户信息</th>
-                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">需求宝物</th>
-                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">需求词条</th>
-                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">词条档位</th>
-                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
-                        <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
-                    </tr>
-                </thead>
-                <tbody id="demandList" class="bg-white divide-y divide-gray-200"></tbody>
-            </table>
+        
+        <div class="bg-white rounded-xl shadow p-4 card-hover mb-4 account-card" 
+             data-price="3000" 
+             data-description="优选前五队伍：3红王异法刀, 6红狗刀, 1红曹氏变种菜刀, 6红卫瓘肉步, 9红张机变种蜀步" 
+             data-id="LE002">
+            <div class="flex justify-between items-start mb-3">
+                <h4 class="font-medium text-gray-700">账号介绍</h4>
+                <span class="text-sm font-semibold text-gray-600 bg-gray-100 px-2 py-0.5 rounded">LE002</span>
+            </div>
+            <div class="mb-4">
+                <p class="text-sm leading-relaxed text-gray-700 whitespace-pre-line">优选前五队伍：3红王异法刀, 6红狗刀, 1红曹氏变种菜刀, 6红卫瓘肉步, 9红张机变种蜀步</p>
+            </div>
+            <div class="flex justify-between items-end">
+                <div class="flex flex-col items-start">
+                    <div class="font-bold text-lg text-primary">售价：¥3,000</div>
+                    <div class="text-xs text-gray-400 line-through mt-1">藏宝阁价格：¥4,000</div>
+                </div>
+                <a href="https://stzb.cbg.163.com/cgi/mweb/equip/1/202507270202116-1-CVYQOH5WSQDRNS?view_loc=link_h5&reco_request_id=1754170180305XLHfA&tag=general_rec_din_tfs&tfid=f_reco_home&tcid=c_reco_home&exposed_scene_id=1754170178959-24020808&refer_sn=01986CBD-E5E7-5B8C-4571-DF8F87382783" target="_blank" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-all duration-300 text-sm font-medium shadow-sm hover:shadow flex items-center">
+                    <i class="fa fa-external-link mr-1.5"></i> 跳转藏宝阁
+                </a>
+            </div>
         </div>
+        
+        <div class="bg-white rounded-xl shadow p-4 card-hover mb-4 account-card" 
+             data-price="1900" 
+             data-description="优选前五队伍：2红纯刀, 2红马超大菜刀, 7红杜预菜刀, 7红杜预菜刀" 
+             data-id="LE003">
+            <div class="flex justify-between items-start mb-3">
+                <h4 class="font-medium text-gray-700">账号介绍</h4>
+                <span class="text-sm font-semibold text-gray-600 bg-gray-100 px-2 py-0.5 rounded">LE003</span>
+            </div>
+            <div class="mb-4">
+                <p class="text-sm leading-relaxed text-gray-700 whitespace-pre-line">优选前五队伍：2红纯刀, 2红马超大菜刀, 7红杜预菜刀, 7红杜预菜刀</p>
+            </div>
+            <div class="flex justify-between items-end">
+                <div class="flex flex-col items-start">
+                    <div class="font-bold text-lg text-primary">售价：¥1,900</div>
+                    <div class="text-xs text-gray-400 line-through mt-1">藏宝阁价格：¥2,500</div>
+                </div>
+                <a href="https://stzb.cbg.163.com/cgi/mweb/equip/1/202507262202116-1-ALMF8PRNHJXZY5?view_loc=link_h5&reco_request_id=1754170180305XLHfA&tag=general_rec_din_tfs&tfid=f_reco_home&tcid=c_reco_home&exposed_scene_id=1754170178959-24020808&refer_sn=01987B23-7E62-8229-F0A4-3785C074533A" target="_blank" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-all duration-300 text-sm font-medium shadow-sm hover:shadow flex items-center">
+                    <i class="fa fa-external-link mr-1.5"></i> 跳转藏宝阁
+                </a>
+            </div>
+        </div>
+        
+        </div>
+        
         
     <script>
         // 微信模态框控制函数
@@ -1556,33 +2175,380 @@
         });
         
         // 回到顶部功能
-        const backToTopBtn = document.getElementById('backToTop');
-        window.addEventListener('scroll', () => {
-            backToTopBtn.classList.toggle('hidden', window.scrollY <= 300);
-        });
-        backToTopBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+        // 确保backToTopBtn只在一处声明（在template.html中）
     </script>
     
     </section>
     
-    </main>
-
-    <!-- 底部导航 -->
-    <footer class="bg-white border-t py-6">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-4 md:mb-0">
-                    <p class="text-gray-600 text-sm">© 2025 率土之滨宝物助手. 保留所有权利.</p>
+            </div>
+            <!-- 联系和反馈内容模块 -->
+            <div id="contact" class="module-hidden">
+                <div class="bg-white rounded-lg shadow-sm p-6 mt-4">
+                    <h2 class="text-lg font-bold text-neutral mb-4 flex items-center">
+                        <i class="fa fa-weixin text-green-500 mr-2"></i>
+                        联系中介
+                    </h2>
+                    <div class="text-center p-4 bg-gray-50 rounded-lg">
+                        <p class="text-gray-600 mb-2">客服微信号</p>
+                        <div class="flex items-center justify-center mb-4">
+                            <span id="wechatNumber" class="text-xl font-medium text-green-600 mr-2">AY5550222</span>
+                            <button onclick="copyWechat()" class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm flex items-center">
+                                <i class="fa fa-copy mr-1"></i> 复制
+                            </button>
+                        </div>
+                        <p id="copyMessage" class="text-green-500 text-sm hidden">复制成功！</p>
+                    </div>
                 </div>
-                <div class="flex space-x-4">
-                    <a href="#" class="text-gray-500 hover:text-primary transition-colors"><i class="fa fa-question-circle"></i> 帮助</a>
-                    <a href="#" class="text-gray-500 hover:text-primary transition-colors"><i class="fa fa-cog"></i> 设置</a>
+            </div>
+            <div id="instruction" class="module-hidden">
+                <div class="bg-white rounded-lg shadow-sm p-6 mt-4">
+                    <h2 class="text-lg font-bold text-neutral mb-4 flex items-center">
+                        <i class="fa fa-book text-blue-500 mr-2"></i>
+                        说明书
+                    </h2>
+                    
+                    <!-- 分页导航 -->
+                    <div class="mb-4 border-b">
+                        <div class="flex space-x-4 overflow-x-auto pb-2">
+                            <button class="instruction-tab py-2 border-b-2 border-primary text-primary font-medium" data-tab="treasure">宝物清单</button>
+                            <button class="instruction-tab py-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700" data-tab="account">账号清单</button>
+                            <button class="instruction-tab py-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700" data-tab="recommend">宝物配将中心</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 分页内容 -->
+                    <div id="treasure-tab" class="instruction-content">
+                        <h3 class="text-base font-bold mb-3">宝物清单模块介绍</h3>
+                        <div class="text-gray-600 space-y-3">
+                            <p>本模块展示了今日在售的各类宝物信息，帮助玩家快速了解市场上的宝物供应情况。</p>
+                            <p><strong>功能特点：</strong></p>
+                            <ul class="list-disc pl-5 space-y-1">
+                                <li>按类型分类展示宝物（武器、防具、坐骑、书籍、饰品等）</li>
+                                <li>提供急出特价宝物专区，展示性价比高的宝物</li>
+                                <li>每个宝物卡片显示详细信息：名称、类型、等级、词条效果和价格</li>
+                                <li>支持点击查看适用武将推荐</li>
+                            </ul>
+                            <p><strong>使用方法：</strong></p>
+                            <ul class="list-disc pl-5 space-y-1">
+                                <li>点击不同分类标签查看对应类型的宝物</li>
+                                <li>查看宝物卡片了解详细信息</li>
+                                <li>需要购买时可联系客服进行咨询和交易</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div id="account-tab" class="instruction-content hidden">
+                        <h3 class="text-base font-bold mb-3">账号清单模块介绍</h3>
+                        <div class="text-gray-600 space-y-3">
+                            <p>本模块展示了当前可供购买的游戏账号信息，帮助玩家找到心仪的账号。</p>
+                            <p><strong>功能特点：</strong></p>
+                            <ul class="list-disc pl-5 space-y-1">
+                                <li>支持按价格区间筛选账号（0~1999、2000~9999、1W~2W、2W以上）</li>
+                                <li>提供自定义价格区间搜索功能</li>
+                                <li>支持按队伍名称或武将名称搜索账号</li>
+                                <li>支持价格升序、降序排序</li>
+                                <li>每个账号显示详细介绍、售价和藏宝阁价格对比</li>
+                            </ul>
+                            <p><strong>使用方法：</strong></p>
+                            <ul class="list-disc pl-5 space-y-1">
+                                <li>点击价格区间按钮筛选账号</li>
+                                <li>在自定义区间输入最小和最大价格，点击应用按钮筛选</li>
+                                <li>在搜索框输入关键词搜索特定账号</li>
+                                <li>点击升序/降序按钮调整排序方式</li>
+                                <li>点击"跳转藏宝阁"按钮查看账号详情</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div id="recommend-tab" class="instruction-content hidden">
+                        <h3 class="text-base font-bold mb-3">宝物配将中心模块介绍</h3>
+                        <div class="text-gray-600 space-y-3">
+                            <p>本模块提供宝物与武将的搭配推荐功能，帮助玩家找到最适合的宝物配置方案。</p>
+                            <p><strong>功能特点：</strong></p>
+                            <ul class="list-disc pl-5 space-y-1">
+                                <li>支持按国家筛选武将（魏、蜀、吴、群）</li>
+                                <li>提供武将名称搜索功能</li>
+                                <li>每个武将显示推荐的宝物搭配方案</li>
+                                <li>展示宝物的详细效果说明</li>
+                            </ul>
+                            <p><strong>使用方法：</strong></p>
+                            <ul class="list-disc pl-5 space-y-1">
+                                <li>点击国家标签筛选对应国家的武将</li>
+                                <li>在搜索框输入武将名称快速查找</li>
+                                <li>点击武将卡片查看推荐的宝物搭配</li>
+                                <li>根据推荐搭配提升队伍战斗力</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="feedback" class="module-hidden">
+                <div class="bg-white rounded-lg shadow-sm p-6 mt-4">
+                    <h2 class="text-lg font-bold text-neutral mb-4 flex items-center">
+                        <i class="fa fa-comment text-blue-500 mr-2"></i>
+                        功能反馈
+                    </h2>
+                    <div class="space-y-4">
+                        <p class="text-gray-600">如有功能建议或问题反馈，请通过以下方式联系我们：</p>
+                        <div class="p-4 bg-gray-50 rounded-lg space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="flex items-center text-gray-600">
+                                    <i class="fa fa-envelope text-blue-500 mr-2"></i>
+                                    <span>邮箱：</span>
+                                </span>
+                                <div class="flex items-center">
+                                    <span id="emailAddress" class="text-blue-600 mr-2">feedback@yunqiguai.com</span>
+                                    <button onclick="copyEmail()" class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm flex items-center">
+                                        <i class="fa fa-copy mr-1"></i> 复制
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="flex items-center text-gray-600">
+                                    <i class="fa fa-weixin text-green-500 mr-2"></i>
+                                    <span>微信：</span>
+                                </span>
+                                <div class="flex items-center">
+                                    <span id="feedbackWechat" class="text-green-600 mr-2">yunqiguai_feedback</span>
+                                    <button onclick="copyFeedbackWechat()" class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm flex items-center">
+                                        <i class="fa fa-copy mr-1"></i> 复制
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <p id="copyEmailMessage" class="text-green-500 text-sm hidden">邮箱复制成功！</p>
+                        <p id="copyFeedbackWechatMessage" class="text-green-500 text-sm hidden">微信复制成功！</p>
+                    </div>
                 </div>
             </div>
         </div>
+    </main>
+    
+    <!-- 一键回到顶部按钮 -->
+    <button id="backToTop" class="fixed bottom-28 right-6 bg-primary text-white p-3 rounded-full shadow-lg opacity-0 transition-opacity duration-300 z-50" onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
+        <i class="fa fa-arrow-up"></i>
+    </button>
+    
+    <script>
+        // 全局的模块切换函数
+        window.showModule = function(moduleId) {
+            // 隐藏所有模块内容
+            const modules = document.querySelectorAll('.module-content');
+            modules.forEach(module => {
+                module.classList.add('module-hidden');
+            });
+            
+            // 隐藏所有联系和说明书相关模块
+            const contactModule = document.getElementById('contact');
+            const instructionModule = document.getElementById('instruction');
+            const feedbackModule = document.getElementById('feedback');
+            
+            if (contactModule) contactModule.classList.add('module-hidden');
+            if (instructionModule) instructionModule.classList.add('module-hidden');
+            if (feedbackModule) feedbackModule.classList.add('module-hidden');
+            
+            // 显示指定模块
+            const targetModule = document.getElementById(moduleId);
+            if (targetModule) {
+                targetModule.classList.remove('module-hidden');
+                
+                // 滚动到模块
+                targetModule.scrollIntoView({behavior: 'smooth', block: 'start'});
+            }
+        }
+        
+        // 说明书分页切换功能
+        document.addEventListener('DOMContentLoaded', function() {
+            // 为说明书标签添加点击事件
+            const instructionTabs = document.querySelectorAll('.instruction-tab');
+            instructionTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // 移除所有标签的激活状态
+                    instructionTabs.forEach(t => {
+                        t.classList.remove('border-primary', 'text-primary');
+                        t.classList.add('border-transparent', 'text-gray-500');
+                    });
+                    
+                    // 添加当前标签的激活状态
+                    this.classList.add('border-primary', 'text-primary');
+                    this.classList.remove('border-transparent', 'text-gray-500');
+                    
+                    // 隐藏所有内容
+                    const contents = document.querySelectorAll('.instruction-content');
+                    contents.forEach(content => {
+                        content.classList.add('hidden');
+                    });
+                    
+                    // 显示对应内容
+                    const tabId = this.getAttribute('data-tab');
+                    const targetContent = document.getElementById(`${tabId}-tab`);
+                    if (targetContent) {
+                        targetContent.classList.remove('hidden');
+                    }
+                });
+            });
+            
+            // 价格区间按钮取消选中功能
+            const priceRangeBtns = document.querySelectorAll('.price-range-btn');
+            priceRangeBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 检查当前按钮是否已选中
+                    const isActive = this.classList.contains('bg-neutral');
+                    
+                    // 重置所有按钮样式
+                    priceRangeBtns.forEach(b => {
+                        b.classList.remove('bg-neutral', 'text-white');
+                        b.classList.add('bg-gray-100', 'text-gray-600');
+                    });
+                    
+                    // 如果之前未选中，则选中当前按钮；否则保持未选中状态（显示全部）
+                    if (!isActive) {
+                        this.classList.add('bg-neutral', 'text-white');
+                        this.classList.remove('bg-gray-100', 'text-gray-600');
+                    }
+                    
+                    // 触发筛选逻辑
+                    if (typeof filterAccounts === 'function') {
+                        filterAccounts();
+                    }
+                });
+            });
+            
+            // 导航项点击处理
+            // 为所有导航项添加点击事件监听器
+            const navItems = document.querySelectorAll('.nav-item');
+            if (navItems.length > 0) {
+                navItems.forEach(item => {
+                    item.addEventListener('click', function(e) {
+                        // 如果已有onclick属性，不拦截默认行为
+                        if (this.hasAttribute('onclick')) return;
+                        
+                        // 阻止默认行为（如页面跳转）
+                        e.preventDefault();
+                        
+                        const targetId = this.getAttribute('data-target');
+                        if (targetId) {
+                            // 获取所有模块内容
+                            const modules = document.querySelectorAll('.module-content');
+                            // 隐藏所有模块
+                            modules.forEach(module => {
+                                module.classList.add('module-hidden');
+                            });
+                            
+                            // 显示目标模块
+                            const targetModule = document.getElementById(targetId);
+                            if (targetModule) {
+                                targetModule.classList.remove('module-hidden');
+                                
+                                // 滚动到目标模块（在移动端使用更简单的滚动方式）
+                                const isMobile = window.innerWidth < 768;
+                                if (isMobile) {
+                                    // 移动端使用更直接的滚动
+                                    window.scrollTo({
+                                        top: targetModule.offsetTop - 80, // 减去导航栏高度
+                                        behavior: 'smooth'
+                                    });
+                                } else {
+                                    targetModule.scrollIntoView({behavior: 'smooth', block: 'start'});
+                                }
+                            }
+                            
+                            // 隐藏联系和反馈模块
+                            const contactModule = document.getElementById('contact');
+                            const feedbackModule = document.getElementById('feedback');
+                            const instructionModule = document.getElementById('instruction');
+                            if (contactModule) contactModule.classList.add('module-hidden');
+                            if (feedbackModule) feedbackModule.classList.add('module-hidden');
+                            if (instructionModule) instructionModule.classList.add('module-hidden');
+                            
+                            // 更新所有导航项的激活状态
+                            navItems.forEach(navItem => {
+                                navItem.classList.remove('nav-active');
+                            });
+                            this.classList.add('nav-active');
+                        }
+                    });
+                });
+            }
+        });
+        
+        // 监听滚动显示回到顶部按钮
+        window.addEventListener('scroll', function() {
+            // 使用let避免重复声明，添加存在性检查
+            let backToTopBtn = document.getElementById('backToTop');
+            if (backToTopBtn) {
+                if (window.scrollY > 300) {
+                    backToTopBtn.style.opacity = '1';
+                } else {
+                    backToTopBtn.style.opacity = '0';
+                }
+            }
+        });
+        
+        // 复制微信号功能
+        function copyWechat() {
+            const wechatNumber = document.getElementById('wechatNumber').textContent;
+            navigator.clipboard.writeText(wechatNumber).then(() => {
+                const message = document.getElementById('copyMessage');
+                message.classList.remove('hidden');
+                setTimeout(() => {
+                    message.classList.add('hidden');
+                }, 2000);
+            });
+        }
+        
+        // 复制邮箱功能
+        function copyEmail() {
+            const emailAddress = document.getElementById('emailAddress').textContent;
+            navigator.clipboard.writeText(emailAddress).then(() => {
+                const message = document.getElementById('copyEmailMessage');
+                message.classList.remove('hidden');
+                setTimeout(() => {
+                    message.classList.add('hidden');
+                }, 2000);
+            });
+        }
+        
+        // 复制反馈微信功能
+        function copyFeedbackWechat() {
+            const feedbackWechat = document.getElementById('feedbackWechat').textContent;
+            navigator.clipboard.writeText(feedbackWechat).then(() => {
+                const message = document.getElementById('copyFeedbackWechatMessage');
+                message.classList.remove('hidden');
+                setTimeout(() => {
+                    message.classList.add('hidden');
+                }, 2000);
+            });
+        }
+    </script>
+
+    <!-- 底部导航（移动端 - 固定在底部，调整z-index避免遮挡回到顶部按钮） -->
+    <footer class="bg-white border-t fixed bottom-0 left-0 right-0 z-20 py-2 md:hidden">
+        <div class="container mx-auto">
+            <div class="flex justify-around">
+                <a href="#treasures" class="flex flex-col items-center text-xs py-2 nav-item nav-active" data-target="treasures">
+                    <i class="fa fa-diamond text-lg mb-1"></i>
+                    <span>宝物清单</span>
+                </a>
+                <a href="#accounts" class="flex flex-col items-center text-xs py-2 nav-item" data-target="accounts">
+                    <i class="fa fa-user text-lg mb-1"></i>
+                    <span>账号清单</span>
+                </a>
+                <a href="#recommendations" class="flex flex-col items-center text-xs py-2 nav-item" data-target="recommendations">
+                    <i class="fa fa-star text-lg mb-1"></i>
+                    <span>宝物配将中心</span>
+                </a>
+
+            </div>
+        </div>
     </footer>
+
+    <!-- 底部信息（电脑端） -->
+    <div class="bg-white border-t py-6 hidden md:block">
+        <div class="container mx-auto px-4">
+            <p class="text-gray-600 text-sm text-center">© 2025 运气怪-游戏助手. 保留所有权利.</p>
+        </div>
+    </div>
 
     <!-- JavaScript 由Python脚本注入 -->
 
@@ -1607,105 +2573,166 @@
         let filteredNormalTreasures = [];
 
         document.addEventListener('DOMContentLoaded', function() {
-            // 宝物-词条-档位联动
-            const demandTreasure = document.getElementById('demandTreasure');
-            const demandForge = document.getElementById('demandForge');
-            const demandLevel = document.getElementById('demandLevel');
-            
-            demandTreasure.addEventListener('change', function() {
-                const val = this.value;
-                demandForge.innerHTML = '<option value="">-- 请选择词条 --</option>';
-                demandLevel.innerHTML = '<option value="">-- 请先选择词条 --</option>';
-                demandForge.disabled = !val;
-                demandLevel.disabled = true;
-                if (val && TREASURE_FORGE_DATA["宝物对应词条"][val]) {
-                    TREASURE_FORGE_DATA["宝物对应词条"][val].forEach(f => {
-                        const opt = document.createElement('option');
-                        opt.value = f;
-                        opt.textContent = f;
-                        demandForge.appendChild(opt);
+            // 需求管理模块已移除
+
+            // 账号筛选相关函数
+            function initAccountFilters() {
+                // 价格区间筛选
+                document.querySelectorAll('.price-range-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        // 重置所有按钮样式
+                        document.querySelectorAll('.price-range-btn').forEach(b => {
+                            b.classList.remove('bg-neutral', 'text-white');
+                            b.classList.add('bg-gray-100', 'text-gray-600');
+                        });
+                        
+                        // 设置当前按钮样式
+                        this.classList.remove('bg-gray-100', 'text-gray-600');
+                        this.classList.add('bg-neutral', 'text-white');
+                        
+                        // 保存筛选条件
+                        const min = parseInt(this.getAttribute('data-min'));
+                        const max = parseInt(this.getAttribute('data-max'));
+                        activePriceRange = {min, max};
+                        customPriceRange = null;
+                        
+                        // 重置自定义价格输入
+                        const minPriceInput = document.getElementById('minPriceInput');
+                        const maxPriceInput = document.getElementById('maxPriceInput');
+                        if (minPriceInput) minPriceInput.value = '';
+                        if (maxPriceInput) maxPriceInput.value = '';
+                        
+                        filterAccountCards();
                     });
-                }
-            });
-
-            demandForge.addEventListener('change', function() {
-                const val = this.value;
-                demandLevel.innerHTML = '<option value="">-- 请选择档位 --</option>';
-                demandLevel.disabled = !val;
-                if (val && TREASURE_FORGE_DATA["词条档位"][val]) {
-                    TREASURE_FORGE_DATA["词条档位"][val].forEach(l => {
-                        const opt = document.createElement('option');
-                        opt.value = l;
-                        opt.textContent = l;
-                        demandLevel.appendChild(opt);
-                    });
-                }
-            });
-
-            // 需求提交
-            document.getElementById('demandForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                const demand = {
-                    id: Date.now(),
-                    wechat: document.getElementById('demandWechat').value,
-                    treasure: demandTreasure.value,
-                    forge: demandForge.value,
-                    level: demandLevel.value,
-                    status: '待匹配'
-                };
-                let demands = JSON.parse(localStorage.getItem('treasureDemands') || '[]');
-                demands.push(demand);
-                localStorage.setItem('treasureDemands', JSON.stringify(demands));
-                renderDemandList();
-                this.reset();
-                alert('需求提交成功！');
-            });
-
-            // 渲染需求列表
-            function renderDemandList() {
-                const demands = JSON.parse(localStorage.getItem('treasureDemands') || '[]');
-                const list = document.getElementById('demandList');
-                list.innerHTML = '';
-                let matchCount = 0;
-
-                demands.forEach(d => {
-                    const isMatched = CURRENT_TREASURES.some(t => t.name === d.treasure && t.forge === d.forge);
-                    if (isMatched) {
-                        d.status = '已匹配';
-                        matchCount++;
-                    }
-                    const tr = document.createElement('tr');
-                    tr.className = isMatched ? 'bg-red-50 text-red-700' : '';
-                    tr.innerHTML = `
-                        <td class="px-4 py-3 whitespace-nowrap">客户 #${d.id.toString().slice(-4)}</td>
-                        <td class="px-4 py-3 whitespace-nowrap">${d.treasure}</td>
-                        <td class="px-4 py-3 whitespace-nowrap">${d.forge}</td>
-                        <td class="px-4 py-3 whitespace-nowrap">${d.level}</td>
-                        <td class="px-4 py-3 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${isMatched ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'}">
-                                ${d.status}
-                            </span>
-                        </td>
-                        <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
-                            <button onclick="deleteDemand(${d.id})" class="text-red-500 hover:text-red-700">删除</button>
-                        </td>
-                    `;
-                    list.appendChild(tr);
                 });
-
-                const alert = document.getElementById('matchAlert');
-                alert.textContent = `📢 有 ${matchCount} 个客户需求匹配到新宝物！`;
-                alert.classList.toggle('hidden', matchCount === 0);
+                
+                // 自定义价格区间应用
+                const customPriceApply = document.getElementById('customPriceApply');
+                if (customPriceApply) {
+                    customPriceApply.addEventListener('click', function() {
+                        const minPriceInput = document.getElementById('minPriceInput');
+                        const maxPriceInput = document.getElementById('maxPriceInput');
+                        if (minPriceInput && maxPriceInput) {
+                            const min = minPriceInput.value ? parseInt(minPriceInput.value) : 0;
+                            const max = maxPriceInput.value ? parseInt(maxPriceInput.value) : 9999999;
+                            
+                            customPriceRange = {min, max};
+                            activePriceRange = null;
+                            
+                            // 重置价格区间按钮样式
+                            document.querySelectorAll('.price-range-btn').forEach(b => {
+                                b.classList.remove('bg-neutral', 'text-white');
+                                b.classList.add('bg-gray-100', 'text-gray-600');
+                            });
+                            
+                            filterAccountCards();
+                        }
+                    });
+                }
+                
+                // 搜索功能
+                const accountSearch = document.getElementById('accountSearch');
+                if (accountSearch) {
+                    accountSearch.addEventListener('input', function() {
+                        searchKeyword = this.value.trim().toLowerCase();
+                        filterAccountCards();
+                    });
+                }
+                
+                // 排序功能
+                const sortPriceAsc = document.getElementById('sortPriceAsc');
+                const sortPriceDesc = document.getElementById('sortPriceDesc');
+                
+                if (sortPriceAsc) {
+                    sortPriceAsc.addEventListener('click', function() {
+                        currentSort = 'asc';
+                        sortAccountCards();
+                    });
+                }
+                
+                if (sortPriceDesc) {
+                    sortPriceDesc.addEventListener('click', function() {
+                        currentSort = 'desc';
+                        sortAccountCards();
+                    });
+                }
+                
+                // 重置筛选
+                const resetAccountFilters = document.getElementById('resetAccountFilters');
+                if (resetAccountFilters) {
+                    resetAccountFilters.addEventListener('click', function() {
+                        // 重置价格区间按钮
+                        document.querySelectorAll('.price-range-btn').forEach(b => {
+                            b.classList.remove('bg-neutral', 'text-white');
+                            b.classList.add('bg-gray-100', 'text-gray-600');
+                        });
+                        
+                        // 重置输入框
+                        const minPriceInput = document.getElementById('minPriceInput');
+                        const maxPriceInput = document.getElementById('maxPriceInput');
+                        const searchInput = document.getElementById('accountSearch');
+                        if (minPriceInput) minPriceInput.value = '';
+                        if (maxPriceInput) maxPriceInput.value = '';
+                        if (searchInput) searchInput.value = '';
+                        
+                        // 重置状态
+                        currentSort = 'default';
+                        activePriceRange = null;
+                        customPriceRange = null;
+                        searchKeyword = '';
+                        
+                        // 应用重置
+                        filterAccountCards();
+                        sortAccountCards();
+                    });
+                }
+            }
+            
+            // 筛选账号卡片
+            function filterAccountCards() {
+                const cards = document.querySelectorAll('.account-card');
+                
+                cards.forEach(card => {
+                    const price = parseInt(card.getAttribute('data-price'));
+                    const description = card.getAttribute('data-description').toLowerCase();
+                    
+                    // 价格筛选
+                    let priceMatch = true;
+                    if (activePriceRange) {
+                        priceMatch = price >= activePriceRange.min && price <= activePriceRange.max;
+                    } else if (customPriceRange) {
+                        priceMatch = price >= customPriceRange.min && price <= customPriceRange.max;
+                    }
+                    
+                    // 关键词搜索
+                    const keywordMatch = searchKeyword === '' || description.includes(searchKeyword);
+                    
+                    // 显示或隐藏卡片
+                    card.style.display = (priceMatch && keywordMatch) ? '' : 'none';
+                });
+            }
+            
+            // 排序账号卡片
+            function sortAccountCards() {
+                const container = document.getElementById('accountListContainer');
+                const cards = Array.from(document.querySelectorAll('.account-card:not([style*="display: none"])'));
+                
+                if (currentSort === 'asc') {
+                    cards.sort((a, b) => parseInt(a.getAttribute('data-price')) - parseInt(b.getAttribute('data-price')));
+                } else if (currentSort === 'desc') {
+                    cards.sort((a, b) => parseInt(b.getAttribute('data-price')) - parseInt(a.getAttribute('data-price')));
+                }
+                
+                // 重新添加排序后的卡片
+                cards.forEach(card => container.appendChild(card));
             }
 
-            // 删除需求
-            window.deleteDemand = function(id) {
-                let demands = JSON.parse(localStorage.getItem('treasureDemands') || '[]');
-                demands = demands.filter(d => d.id !== id);
-                localStorage.setItem('treasureDemands', JSON.stringify(demands));
-                renderDemandList();
-            };
-
+            // 账号筛选相关全局变量
+            let activePriceRange = {min: 0, max: 1999};
+            let customPriceRange = null;
+            let searchKeyword = '';
+            let currentSort = 'default';
+            
             // 模块切换（适配移动端底部导航）
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.addEventListener('click', function(e) {
@@ -1715,6 +2742,11 @@
                     document.getElementById(target).classList.remove('module-hidden');
                     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('nav-active'));
                     this.classList.add('nav-active');
+                    
+                    // 如果切换到账号模块，初始化筛选功能
+                    if (target === 'accounts') {
+                        initAccountFilters();
+                    }
                 });
             });
 
@@ -2020,7 +3052,6 @@
             document.getElementById('nextPageBtn').addEventListener('click', () => loadPage(currentPage + 1));
 
             // 初始化
-            renderDemandList();
             document.querySelector('.nav-item[data-target="treasures"]').click();
             document.querySelector('.price-tab[data-type="all"]').click();
             updateForgeEffectOptions();
