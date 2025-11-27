@@ -139,7 +139,27 @@
                 <div class="swiper-container relative overflow-hidden">
                     <div id="swiperWrapper" class="flex transition-transform duration-300 ease-out">
                         <!-- 动态生成滑动页 -->
+                        <div class="swiper-slide flex-shrink-0 p-1">            <div class="bg-white rounded-xl shadow p-3 card-hover mb-3 w-full treasure-card" 
+                 data-price="low" data-name="大将" data-forge="强韧"
+                 data-treasure-type="大将" data-forge-effect="强韧">
+                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('urgent-16')">
+                    <h3 class="font-bold text-base">大将强韧17</h3>
+                    <div class="flex items-center">
                         
+                        <span class="bg-urgent/10 text-urgent text-xs px-2 py-0.5 rounded">急出</span>
+                    </div>
+                </div>
+                <div class="text-urgent font-bold text-lg mb-1">760元</div>
+                <div id="urgent-16" class="hidden">
+                    <div class="mb-2 mt-2"><div class="font-medium text-gray-800 text-xs mb-1">自带效果：</div><div class="effect-item text-xs">稳固：防御属性提高 1.0%</div><div class="effect-item text-xs">强韧：受到的普通攻击伤害降低 2.0%</div><div class="effect-item text-xs">护主：战斗开始后前 2 回合，援护我军大营</div></div>
+                    <div class="mb-2"><div class="font-medium text-gray-800 text-xs mb-1">锻造效果：</div><div class="text-gray-600 text-xs">强韧：受到的普通攻击伤害降低 17%</div></div>
+                    <div><div class="font-medium text-gray-800 text-xs mb-1">适用武将：</div><div class="effect-item text-xs">严颜, 郝昭, 汉董卓, 曹操, 张辽（前锋抗伤）, 诸葛恪, 褒姒, 妹喜, 骊姬, 袁绍（群雄）, 孟获, 祝融（群）, 千吉</div></div>
+                </div>
+                <div class="text-xs text-gray-400 mt-1 cursor-pointer" onclick="toggleDetails('urgent-16')">
+                    <i class="fa fa-chevron-down" id="icon-urgent-16"></i> 详情
+                </div>
+            </div>
+            </div>
                     </div>
                     <!-- 页面指示器 -->
                     <div id="pagination" class="absolute bottom-2 left-0 right-0 flex justify-center space-x-1.5"></div>
@@ -894,27 +914,6 @@
             </div>
             
             <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
-                 data-price="low" data-name="大将" data-forge="强韧"
-                 data-treasure-type="大将" data-forge-effect="强韧" style="display: none;">
-                <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-16')">
-                    <h3 class="font-bold text-base">大将强韧17</h3>
-                    <div class="flex items-center">
-                        
-                        <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
-                    </div>
-                </div>
-                <div class="text-primary font-bold text-lg mb-1">850元</div>
-                <div id="normal-16" class="hidden">
-                    <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">稳固：防御属性提高 1.0%</div><div class="effect-item text-xs">强韧：受到的普通攻击伤害降低 2.0%</div><div class="effect-item text-xs">护主：战斗开始后前 2 回合，援护我军大营</div></div>
-                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">强韧：受到的普通攻击伤害降低 17%</div></div>
-                    <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">严颜, 郝昭, 汉董卓, 曹操, 张辽（前锋抗伤）, 诸葛恪, 褒姒, 妹喜, 骊姬, 袁绍（群雄）, 孟获, 祝融（群）, 千吉</div></div>
-                </div>
-                <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-16')">
-                    <i class="fa fa-chevron-down" id="icon-normal-16"></i> 详情
-                </div>
-            </div>
-            
-            <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
                  data-price="low" data-name="大将" data-forge="沉稳"
                  data-treasure-type="大将" data-forge-effect="沉稳" style="display: none;">
                 <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-17')">
@@ -1041,19 +1040,19 @@
             </div>
             
             <div class="bg-white rounded-xl shadow p-3 card-hover mb-4 treasure-card normal-treasure-card" 
-                 data-price="low" data-name="屈卢" data-forge="骁锐"
+                 data-price="high" data-name="屈卢" data-forge="骁锐"
                  data-treasure-type="屈卢" data-forge-effect="骁锐" style="display: none;">
                 <div class="cursor-pointer flex justify-between items-start mb-1" onclick="toggleDetails('normal-23')">
-                    <h3 class="font-bold text-base">屈卢骁锐12</h3>
+                    <h3 class="font-bold text-base">屈卢骁锐15</h3>
                     <div class="flex items-center">
                         
-                        <span class="bg-low/10 text-low text-xs px-2 py-0.5 rounded">千元以下</span>
+                        
                     </div>
                 </div>
-                <div class="text-primary font-bold text-lg mb-1">880元</div>
+                <div class="text-primary font-bold text-lg mb-1">询价</div>
                 <div id="normal-23" class="hidden">
                     <div class="mb-2 mt-2"><div class="text-xs font-medium text-gray-800 mb-1">自带效果：</div><div class="effect-item text-xs">骁锐：攻击属性提高 2.0</div><div class="effect-item text-xs">无畏：追击战法伤害提高 1.0%</div><div class="effect-item text-xs">破敌：造成的攻击伤害无视目标 10.0% 的防御属性</div></div>
-                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">骁锐：攻击属性提高 12%</div></div>
+                    <div class="mb-2"><div class="text-xs font-medium text-gray-800 mb-1">锻造效果：</div><div class="text-xs text-gray-600">骁锐：攻击属性提高 15%</div></div>
                     <div><div class="text-xs font-medium text-gray-800 mb-1">适用武将：</div><div class="effect-item text-xs">马岱, 马超, 魏延, 祝融, 太史慈, 马云禄</div></div>
                 </div>
                 <div class="text-xs text-gray-400 cursor-pointer" onclick="toggleDetails('normal-23')">
