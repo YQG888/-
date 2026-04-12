@@ -134,280 +134,76 @@
         </div>
         <div class="mb-6">
             <h3 class="text-base font-bold text-neutral mb-3 flex items-center">
-                <i class="fa fa-fire text-urgent mr-2"></i> 急出特价
+                <i class="fa fa-exchange text-blue-500 mr-2"></i> 四通业务
             </h3>
-            <div id="urgentTreasures">
-                <!-- 横向滑动分页展示 -->
-                <div class="swiper-container relative overflow-hidden">
-                    <div id="swiperWrapper" class="flex transition-transform duration-300 ease-out">
-                        <!-- 动态生成滑动页 -->
+            <button id="s四通Btn" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] flex items-center justify-center">
+                <i class="fa fa-exchange mr-2 text-lg"></i> 四通业务
+            </button>
+        </div>
+        
+        <!-- 四通业务弹窗 -->
+        <div id="s四通Modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white rounded-lg p-6 max-w-md w-full">
+                <div class="text-center">
+                    <div class="text-gray-700 mb-4 text-left space-y-3">
+                        <p>只有4000四通和10000四通两项，需要的点击顶部联系中介按钮</p>
                         
+                        <div class="mt-4">
+                            <p><strong>价格与需求：</strong></p>
+                            <p>• 4000四通，140元，需要垃圾蓝宝物</p>
+                            <p>• 10000四通，270元，需要垃圾粉（没有的可以联系中介购买，一条龙服务）</p>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <p><strong>比较稳定的倒玉垃圾粉：</strong></p>
+                            <p>指定一个270，随机安排265</p>
+                            <p>• 彤素善谋、彤素坚忍</p>
+                            <p>• 真刚善谋、真刚坚忍</p>
+                            <p>• 游飘炫惑、游飘驱火</p>
+                            <p>• 承影炫惑、承影驱火</p>
+                            <p>• 掩日骁锐、掩日至策、掩日亢历</p>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <p><strong>新手倒玉流程科普：</strong></p>
+                            <p>• 无论蓝宝 / 粉宝，先微信发宝物词条审核，确认可用后再操作</p>
+                            <p>• 审核通过后上架市集，提供准确上架时间 + 宝物截图，并完成付款</p>
+                            <p>• 我将按上架时间收藏关注，待市集 24 小时公售期结束后直接拍下</p>
+                            <p>• 全程 3 天 72 小时审核期，包售后：若审核失败，可换号重拍（一般第一次就能过）或直接退款，安全无忧</p>
+                        </div>
                     </div>
-                    <!-- 页面指示器 -->
-                    <div id="pagination" class="absolute bottom-2 left-0 right-0 flex justify-center space-x-1.5"></div>
+                    <button id="closeModalBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors">
+                        关闭
+                    </button>
                 </div>
             </div>
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    const wrapper = document.getElementById('swiperWrapper');
-                    const container = wrapper.parentElement;
-                    let currentPage = 0;
-                    let pageWidth = 0;
-                    let totalPages = 0;
-                    let startX = 0;
-                    let moveX = 0;
-                    let isDragging = false;
-                    
-                    // 计算页面尺寸和总数
-                    function calculateDimensions() {
-                        pageWidth = container.offsetWidth;
-                        const pages = wrapper.querySelectorAll('.swiper-slide');
-                        totalPages = pages.length;
-                        
-                        // 设置每个滑动页的宽度
-                        pages.forEach(page => {
-                            page.style.width = pageWidth + 'px';
-                        });
-                    }
-                    
-                    // 滚动到指定页面
-                    function scrollToPage(pageIndex) {
-                        currentPage = Math.max(0, Math.min(pageIndex, totalPages - 1));
-                        wrapper.style.transform = 'translateX(-' + (currentPage * pageWidth) + 'px)';
-                    }
-                    
-                    // 触摸开始
-                    function handleTouchStart(e) {
-                        startX = e.touches[0].clientX;
-                        isDragging = true;
-                    }
-                    
-                    // 记录上次移动的时间和位置，用于计算速度
-                    let lastMoveTime = 0;
-                    let lastMoveX = 0;
-                    
-                    // 触摸开始
-                    function handleTouchStart(e) { 
-                        // 检查点击的目标是否是详情按钮或其内部元素，如果是则不启动拖动
-                        const target = e.touches[0].target;
-                        if (target.closest('.details-btn') || target.closest('.treasure-card-details')) return;
-                        
-                        startX = e.touches[0].clientX;
-                        isDragging = true;
-                        lastMoveTime = Date.now();
-                        lastMoveX = startX;
-                    }
-                    
-                    // 触摸移动
-                    function handleTouchMove(e) { 
-                        if (!isDragging) return;
-                        moveX = e.touches[0].clientX;
-                        const diff = moveX - startX;
-                        const currentPosition = -currentPage * pageWidth;
-                        
-                        // 允许在边界外有更大的拖动范围
-                        const allowedRange = pageWidth * 0.8;
-                        const newPosition = currentPosition + diff;
-                        
-                        // 宽松的边界限制，允许用户在边界外有更大的拖动空间
-                        if ((currentPage > 0 || diff > -allowedRange) && (currentPage < totalPages - 1 || diff < allowedRange)) { 
-                            // 应用拖动效果（不使用transition）
-                            wrapper.style.transition = 'none';
-                            wrapper.style.transform = 'translateX(' + newPosition + 'px)';
-                        }
-                        
-                        // 更新移动速度计算所需的参数
-                        lastMoveTime = Date.now();
-                        lastMoveX = moveX;
-                    }
-                    
-                    // 触摸结束
-                    function handleTouchEnd(e) { 
-                        if (!isDragging) return;
-                        isDragging = false;
-                        const diff = moveX - startX;
-                        
-                        // 计算拖动速度（像素/毫秒）
-                        const currentTime = Date.now();
-                        const timeDiff = currentTime - lastMoveTime;
-                        const velocity = timeDiff > 0 ? (moveX - lastMoveX) / timeDiff : 0;
-                        
-                        // 应用惯性滚动
-                        const inertiaFactor = 300; // 惯性因子，调整惯性大小
-                        const inertiaOffset = velocity * inertiaFactor;
-                        const totalOffset = diff + inertiaOffset;
-                        
-                        // 降低拖动阈值，使滑动更容易触发页面切换
-                        const swipeThreshold = pageWidth * 0.15;
-                        
-                        // 恢复transition，使用更流畅的缓动函数
-                        wrapper.style.transition = 'transform duration-500 ease-out';
-                        
-                        // 判断是否需要切换页面
-                        if (Math.abs(totalOffset) > swipeThreshold || Math.abs(velocity) > 0.5) { 
-                            // 根据总偏移量和速度决定切换的页数
-                            const pagesToMove = Math.max(1, Math.min(Math.floor(Math.abs(totalOffset) / pageWidth) + 1, 2));
-                            scrollToPage(diff > 0 ? Math.max(0, currentPage - pagesToMove) : Math.min(totalPages - 1, currentPage + pagesToMove));
-                        } else { 
-                            // 回到当前页面
-                            scrollToPage(currentPage);
-                        }
-                        
-                        // 移除滑动结束后关闭所有详情面板的逻辑，避免影响用户体验
-                        // 这样可以保持用户已经打开的详情面板状态
-                    }
-                    
-                    // 鼠标拖拽支持（桌面端）
-                    function handleMouseDown(e) { 
-                        // 检查点击的目标是否是详情按钮或其内部元素，如果是则不启动拖动
-                        const target = e.target;
-                        if (target.closest('.details-btn') || target.closest('.treasure-card-details')) return;
-                        
-                        startX = e.clientX;
-                        isDragging = true;
-                        lastMoveTime = Date.now();
-                        lastMoveX = startX;
-                    }
-                    
-                    function handleMouseMove(e) { 
-                        if (!isDragging) return;
-                        moveX = e.clientX;
-                        const diff = moveX - startX;
-                        const currentPosition = -currentPage * pageWidth;
-                        
-                        // 允许在边界外有更大的拖动范围
-                        const allowedRange = pageWidth * 0.8;
-                        const newPosition = currentPosition + diff;
-                        
-                        // 宽松的边界限制，允许用户在边界外有更大的拖动空间
-                        if ((currentPage > 0 || diff > -allowedRange) && (currentPage < totalPages - 1 || diff < allowedRange)) { 
-                            // 应用拖动效果（不使用transition）
-                            wrapper.style.transition = 'none';
-                            wrapper.style.transform = 'translateX(' + newPosition + 'px)';
-                        }
-                        
-                        // 更新移动速度计算所需的参数
-                        lastMoveTime = Date.now();
-                        lastMoveX = moveX;
-                    }
-                    
-                    function handleMouseUp(e) { 
-                        if (!isDragging) return;
-                        isDragging = false;
-                        const diff = moveX - startX;
-                        
-                        // 计算拖动速度（像素/毫秒）
-                        const currentTime = Date.now();
-                        const timeDiff = currentTime - lastMoveTime;
-                        const velocity = timeDiff > 0 ? (moveX - lastMoveX) / timeDiff : 0;
-                        
-                        // 应用惯性滚动
-                        const inertiaFactor = 300; // 惯性因子，调整惯性大小
-                        const inertiaOffset = velocity * inertiaFactor;
-                        const totalOffset = diff + inertiaOffset;
-                        
-                        // 降低拖动阈值，使滑动更容易触发页面切换
-                        const swipeThreshold = pageWidth * 0.15;
-                        
-                        // 恢复transition，使用更流畅的缓动函数
-                        wrapper.style.transition = 'transform duration-500 ease-out';
-                        
-                        // 判断是否需要切换页面
-                        if (Math.abs(totalOffset) > swipeThreshold || Math.abs(velocity) > 0.5) { 
-                            // 根据总偏移量和速度决定切换的页数
-                            const pagesToMove = Math.max(1, Math.min(Math.floor(Math.abs(totalOffset) / pageWidth) + 1, 2));
-                            scrollToPage(diff > 0 ? Math.max(0, currentPage - pagesToMove) : Math.min(totalPages - 1, currentPage + pagesToMove));
-                        } else { 
-                            // 回到当前页面
-                            scrollToPage(currentPage);
-                        }
-                        
-                        // 移除滑动结束后关闭所有详情面板的逻辑，避免影响用户体验
-                        // 这样可以保持用户已经打开的详情面板状态
-                    }
-                    
-                    function handleMouseLeave() {
-                        if (!isDragging) return;
-                        isDragging = false;
-                        
-                        // 恢复transition
-                        wrapper.style.transition = 'transform duration-300 ease-out';
-                        
-                        // 回到当前页面
-                        scrollToPage(currentPage);
-                        
-                        // 移除滑动结束后关闭所有详情面板的逻辑，避免影响用户体验
-                        // 这样可以保持用户已经打开的详情面板状态
-                    }
-                    
-                    // 初始化
-                    function initSlider() {
-                        calculateDimensions();
-                        scrollToPage(0);
-                        
-                        // 绑定触摸事件
-                        container.addEventListener('touchstart', handleTouchStart);
-                        container.addEventListener('touchmove', handleTouchMove);
-                        container.addEventListener('touchend', handleTouchEnd);
-                        
-                        // 绑定鼠标事件（桌面端支持）
-                        container.addEventListener('mousedown', handleMouseDown);
-                        container.addEventListener('mousemove', handleMouseMove);
-                        container.addEventListener('mouseup', handleMouseUp);
-                        container.addEventListener('mouseleave', handleMouseLeave);
-                    }
-                    
-                    // 窗口大小改变时重新计算
-                    window.addEventListener('resize', calculateDimensions);
-                    
-                    // 初始化滑块
-                    if (wrapper) { 
-                        initSlider();
-                        
-                        // 添加分页功能
-                        (function() {
-                            // 增强scrollToPage函数
-                            const originalScrollToPage = scrollToPage;
-                            scrollToPage = function(pageIndex) { 
-                                originalScrollToPage(pageIndex);
-                                updatePagination();
-                            };
-                            
-                            // 创建分页指示器
-                            function createPagination() { 
-                                const pagination = document.getElementById('pagination');
-                                if (!pagination) return;
-                                
-                                pagination.innerHTML = '';
-                                const pages = wrapper.querySelectorAll('.swiper-slide');
-                                const total = pages.length;
-                                
-                                for (let i = 0; i < total; i++) { 
-                                    const dot = document.createElement('button');
-                                    dot.className = 'w-2 h-2 rounded-full transition-colors ' + (i === currentPage ? 'bg-urgent' : 'bg-gray-300');
-                                    dot.onclick = () => scrollToPage(i);
-                                    pagination.appendChild(dot);
-                                }
-                            }
-                            
-                            // 更新分页指示器
-                            function updatePagination() { 
-                                const dots = document.querySelectorAll('#pagination button');
-                                dots.forEach((dot, index) => { 
-                                    dot.className = 'w-2 h-2 rounded-full transition-colors ' + (index === currentPage ? 'bg-urgent' : 'bg-gray-300');
-                                });
-                            }
-                            
-                            // 初始化时创建分页
-                            setTimeout(createPagination, 100);
-                            
-                            // 窗口大小改变时重新创建
-                            window.addEventListener('resize', createPagination);
-                        })();
-                    }
-                });
-            </script>
         </div>
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // 四通业务按钮点击事件
+                const s四通Btn = document.getElementById('s四通Btn');
+                const s四通Modal = document.getElementById('s四通Modal');
+                const closeModalBtn = document.getElementById('closeModalBtn');
+                
+                if (s四通Btn && s四通Modal && closeModalBtn) {
+                    s四通Btn.addEventListener('click', function() {
+                        s四通Modal.classList.remove('hidden');
+                    });
+                    
+                    closeModalBtn.addEventListener('click', function() {
+                        s四通Modal.classList.add('hidden');
+                    });
+                    
+                    // 点击弹窗外部关闭
+                    s四通Modal.addEventListener('click', function(e) {
+                        if (e.target === s四通Modal) {
+                            s四通Modal.classList.add('hidden');
+                        }
+                    });
+                }
+            });
+        </script>
 
         <div class="relative mb-4">
             <div class="flex gap-2 mb-2 flex-wrap">
